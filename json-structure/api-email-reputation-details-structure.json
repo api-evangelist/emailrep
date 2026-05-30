@@ -1,0 +1,142 @@
+{
+  "$schema": "https://json-structure.org/meta/core/v0/#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/emailrep/refs/heads/main/json-structure/api-email-reputation-details-structure.json",
+  "name": "EmailReputationDetails",
+  "description": "Detailed intelligence signals about the email address and its domain.",
+  "type": "object",
+  "properties": {
+    "blacklisted": {
+      "type": "boolean",
+      "description": "The email is believed to be malicious or spammy.",
+      "example": false
+    },
+    "malicious_activity": {
+      "type": "boolean",
+      "description": "The email has exhibited malicious behavior (e.g. phishing or fraud).",
+      "example": false
+    },
+    "malicious_activity_recent": {
+      "type": "boolean",
+      "description": "Malicious behavior observed within the last 90 days.",
+      "example": false
+    },
+    "credentials_leaked": {
+      "type": "boolean",
+      "description": "Credentials for the email were leaked at some point (data breach, paste, dark web, etc.).",
+      "example": true
+    },
+    "credentials_leaked_recent": {
+      "type": "boolean",
+      "description": "Credentials were leaked within the last 90 days.",
+      "example": false
+    },
+    "data_breach": {
+      "type": "boolean",
+      "description": "The email appeared in a known data breach.",
+      "example": true
+    },
+    "first_seen": {
+      "type": "string",
+      "description": "First date the email was observed in a breach, credential leak, or exhibiting malicious or spammy behavior. `never` if never seen.",
+      "example": "07/01/2008"
+    },
+    "last_seen": {
+      "type": "string",
+      "description": "Last date the email was observed in a breach, credential leak, or exhibiting malicious or spammy behavior. `never` if never seen.",
+      "example": "05/24/2019"
+    },
+    "domain_exists": {
+      "type": "boolean",
+      "description": "Whether the email's domain is a valid, resolvable domain.",
+      "example": true
+    },
+    "domain_reputation": {
+      "type": "string",
+      "description": "Reputation verdict for the email's domain. `n/a` when the domain is a free provider, disposable, or does not exist.",
+      "enum": [
+        "high",
+        "medium",
+        "low",
+        "n/a"
+      ],
+      "example": "high"
+    },
+    "new_domain": {
+      "type": "boolean",
+      "description": "The domain was registered within the last year.",
+      "example": false
+    },
+    "days_since_domain_creation": {
+      "type": "int32",
+      "description": "Days since the domain was created.",
+      "example": 10341
+    },
+    "suspicious_tld": {
+      "type": "boolean",
+      "description": "The domain uses a top-level domain associated with abuse.",
+      "example": false
+    },
+    "spam": {
+      "type": "boolean",
+      "description": "The email has exhibited spammy behavior (e.g. spam traps, login form abuse).",
+      "example": false
+    },
+    "free_provider": {
+      "type": "boolean",
+      "description": "The email uses a free email provider (e.g. Gmail, Yahoo, Outlook).",
+      "example": false
+    },
+    "disposable": {
+      "type": "boolean",
+      "description": "The email uses a temporary or disposable provider.",
+      "example": false
+    },
+    "deliverable": {
+      "type": "boolean",
+      "description": "The address is deliverable based on SMTP probes and MX checks.",
+      "example": true
+    },
+    "accept_all": {
+      "type": "boolean",
+      "description": "The mail server has a default accept-all policy.",
+      "example": true
+    },
+    "valid_mx": {
+      "type": "boolean",
+      "description": "The domain has a valid MX record.",
+      "example": true
+    },
+    "spoofable": {
+      "type": "boolean",
+      "description": "The email address can be spoofed (e.g. SPF is not strict or DMARC is not enforced).",
+      "example": false
+    },
+    "spf_strict": {
+      "type": "boolean",
+      "description": "SPF record is sufficiently strict to prevent spoofing.",
+      "example": true
+    },
+    "dmarc_enforced": {
+      "type": "boolean",
+      "description": "DMARC is configured correctly and enforced.",
+      "example": true
+    },
+    "profiles": {
+      "type": "array",
+      "description": "Online profiles where the email has been observed.",
+      "items": {
+        "type": "string"
+      },
+      "example": [
+        "myspace",
+        "spotify",
+        "twitter",
+        "pinterest",
+        "flickr",
+        "linkedin",
+        "vimeo",
+        "angellist"
+      ]
+    }
+  }
+}

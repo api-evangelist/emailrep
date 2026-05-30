@@ -1,0 +1,114 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: EmailRep
+providerId: emailrep
+created: '2026-05-30'
+modified: '2026-05-30'
+reconciled: true
+tags:
+  - Email Reputation
+  - Threat Intelligence
+  - Security
+  - Phishing
+description: >-
+  EmailRep operates a three-tier pricing model. The Free (Community) tier is
+  literally $0/month with 250 queries/month capped at 10 queries/day —
+  positioned for personal, non-commercial use by researchers and analysts.
+  The Commercial (Pro) tier is a $20/month subscription that lifts the daily
+  cap and raises the monthly quota to 1,000 queries with email support. The
+  Enterprise tier is custom-priced for high-volume access with SLA-backed
+  support. All tiers receive the full API response — pricing scales quota
+  and support, not response fidelity.
+sources:
+  - https://emailrep.io
+  - https://emailrep.io/key
+  - https://docs.sublimesecurity.com/reference/emailrep-introduction
+plans:
+  - id: emailrep-community-free
+    name: Community
+    type: freemium
+    description: >-
+      Free tier for personal, non-commercial use. Yes, literally $0/month —
+      250 queries per month, capped at 10 queries per day.
+    entries:
+      - label: Monthly Queries
+        name: monthly_queries
+        type: quota
+        metric: request
+        limit: 250
+        timeFrame: month
+        geo: global
+        unit: 1
+        price: '$0'
+        userMultiplied: false
+      - label: Daily Query Cap
+        name: daily_queries
+        type: quota
+        metric: request
+        limit: 10
+        timeFrame: day
+        geo: global
+        unit: 1
+        price: '$0'
+        userMultiplied: false
+    elements:
+      - name: Full API Response
+      - name: Reputation Lookup (GET /{email})
+      - name: Abuse Report Submission (POST /report)
+      - name: All EmailRep Signal Fields
+  - id: emailrep-commercial
+    name: Commercial
+    type: subscription
+    description: >-
+      Paid commercial subscription. Full API response, 1,000 queries/month,
+      no daily cap, email support.
+    entries:
+      - label: Monthly Subscription
+        name: monthly_subscription
+        type: subscription
+        metric: month
+        limit: 1
+        timeFrame: month
+        geo: global
+        unit: 1
+        price: '$20'
+        userMultiplied: false
+      - label: Monthly Queries
+        name: monthly_queries
+        type: quota
+        metric: request
+        limit: 1000
+        timeFrame: month
+        geo: global
+        unit: 1
+        price: included
+        userMultiplied: false
+    elements:
+      - name: Full API Response
+      - name: No Daily Query Cap
+      - name: Email Support
+      - name: Reputation Lookup (GET /{email})
+      - name: Abuse Report Submission (POST /report)
+  - id: emailrep-enterprise
+    name: Enterprise
+    type: enterprise
+    description: >-
+      High-volume or high-throughput plan with custom pricing, no daily cap,
+      and SLA-backed support. Contact Sublime Security to scope.
+    entries:
+      - label: High-Volume Queries
+        name: high_volume_queries
+        type: tiered
+        metric: request
+        limit: -1
+        timeFrame: month
+        geo: global
+        unit: 1
+        price: contact sales
+        userMultiplied: false
+    elements:
+      - name: High-Volume API Access
+      - name: No Daily Query Cap
+      - name: Support with SLA
+      - name: Custom Quota Sizing

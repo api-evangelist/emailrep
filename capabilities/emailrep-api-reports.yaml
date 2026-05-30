@@ -1,0 +1,95 @@
+naftiko: "1.0.0-alpha2"
+
+info:
+  label: "EmailRep API — Reports"
+  description: >-
+    EmailRep API — Reports. 1 operation. Lead operation: report an email
+    address as exhibiting malicious behavior (BEC, phishing, maldoc, fraud,
+    spam, account takeover) so the EmailRep reputation graph picks up the
+    signal. Self-contained Naftiko capability covering one EmailRep business
+    surface.
+  tags:
+    - EmailRep
+    - Email
+    - Reports
+    - Threat Intelligence
+  created: "2026-05-30"
+  modified: "2026-05-30"
+
+binds:
+  - namespace: env
+    keys:
+      EMAILREP_API_KEY: EMAILREP_API_KEY
+
+capability:
+
+  # ── 1. Consumes — the upstream HTTP API this capability speaks to ─────
+  consumes:
+    - type: http
+      namespace: "emailrep-api-reports"
+      baseUri: "https://emailrep.io"
+      description: "EmailRep API — Reports business capability. Self-contained, no shared references."
+      authentication:
+        type: apikey
+        key: Key
+        value: "{{env.EMAILREP_API_KEY}}"
+        placement: header
+      resources:
+        - name: "report"
+          path: "/report"
+          operations:
+            - name: "reportEmail"
+              method: POST
+              description: "Report an email address as exhibiting malicious behavior."
+              inputParameters:
+                - name: "body"
+                  in: body
+                  type: object
+                  required: true
+                  description: "Report payload: email, tags, optional description, timestamp, and expires."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+
+  # ── 2. REST exposer — required default. One Spectral-compliant resource per consumed op ──
+  exposes:
+    - type: rest
+      namespace: "emailrep-api-reports-rest"
+      port: 8080
+      description: "REST adapter for EmailRep API — Reports. One Spectral-compliant resource per consumed operation, prefixed with /v1."
+      resources:
+        - path: "/v1/email-reports"
+          name: "email-reports"
+          description: "REST surface for community email-abuse reports."
+          operations:
+            - method: POST
+              name: "reportEmail"
+              description: "Report an email address as exhibiting malicious behavior."
+              call: "emailrep-api-reports.reportEmail"
+              with:
+                body: "rest.body"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+
+  # ── 3. MCP exposer — required default. One verb-noun tool per consumed op ──
+    - type: mcp
+      namespace: "emailrep-api-reports-mcp"
+      port: 9090
+      transport: http
+      description: "MCP adapter for EmailRep API — Reports. One tool per consumed operation, routed inline through this capability's consumes block."
+      tools:
+        - name: "report-email"
+          description: "Report an email address as exhibiting malicious behavior."
+          hints:
+            readOnly: false
+            destructive: false
+            idempotent: false
+          call: "emailrep-api-reports.reportEmail"
+          with:
+            body: "tools.body"
+          outputParameters:
+            - type: object
+              mapping: "$."

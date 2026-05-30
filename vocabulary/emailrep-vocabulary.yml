@@ -1,0 +1,190 @@
+vocabulary: "1.0.0"
+
+info:
+  provider: "EmailRep"
+  description: >-
+    Unified operational and capability vocabulary for the EmailRep email
+    reputation and threat-intelligence API operated by Sublime Security.
+    Maps the API's HTTP surface (reputation queries and abuse reports) to
+    the Naftiko capability surface (REST + MCP exposers) so analysts,
+    security engineers, marketers, and product teams can discover the right
+    signal for their workflow.
+  created: "2026-05-30"
+  modified: "2026-05-30"
+
+# OPERATIONAL DIMENSION (from OpenAPI)
+operational:
+  apis:
+    - name: "EmailRep API"
+      namespace: "emailrep-api"
+      version: "1.0"
+      baseUrl: "https://emailrep.io"
+      status: active
+      authentication: ApiKey
+      tags:
+        - Email Reputation
+        - Threat Intelligence
+        - Phishing
+        - Fraud
+        - Deliverability
+
+  resources:
+    - name: "email"
+      api: "emailrep-api"
+      description: "Email-address reputation lookup. Returns reputation verdict, suspicious flag, references count, and detailed signal block."
+      actions:
+        - query
+    - name: "report"
+      api: "emailrep-api"
+      description: "Community-contributed report of malicious behavior tied to an email address."
+      actions:
+        - submit
+
+  actions:
+    - name: query
+      verb: GET
+      pattern: read
+      description: "Look up reputation and intelligence signals for an email address."
+    - name: submit
+      verb: POST
+      pattern: write
+      description: "Submit a community report of malicious email behavior into the reputation graph."
+
+  schemas:
+    core:
+      - name: EmailReputation
+        description: "Reputation verdict + suspicious flag + references + details for an email."
+        keyProperties: [email, reputation, suspicious, references, details, summary]
+      - name: EmailReputationDetails
+        description: "Detailed intelligence-signal block for an email."
+        keyProperties: [blacklisted, malicious_activity, credentials_leaked, data_breach,
+          first_seen, last_seen, domain_exists, domain_reputation, new_domain,
+          days_since_domain_creation, suspicious_tld, spam, free_provider, disposable,
+          deliverable, accept_all, valid_mx, spoofable, spf_strict, dmarc_enforced, profiles]
+    reports:
+      - name: ReportRequest
+        description: "Payload for submitting a malicious-email report."
+        keyProperties: [email, tags, description, timestamp, expires]
+      - name: ReportResponse
+        description: "Outcome of a report submission."
+        keyProperties: [status, reason]
+
+  parameters:
+    identifiers:
+      - name: email
+        in: path
+        type: string
+        description: "Email address being queried."
+    filters:
+      - name: summary
+        in: query
+        type: boolean
+        description: "Include a human-readable summary string in the response."
+
+  enums:
+    reputation:
+      - high
+      - medium
+      - low
+      - none
+    domainReputation:
+      - high
+      - medium
+      - low
+      - n/a
+    reportTags:
+      - bec
+      - phishing
+      - maldoc
+      - fraud
+      - spam
+      - account_takeover
+    reportStatus:
+      - success
+      - fail
+
+  authentication:
+    - scheme: ApiKey
+      header: Key
+      description: "API key issued at emailrep.io/key. Free, Commercial, or Enterprise tier."
+      usedBy: [emailrep-api]
+
+# CAPABILITY DIMENSION (from Naftiko)
+capability:
+  workflows:
+    - name: "EmailRep API — Reputation"
+      file: "capabilities/emailrep-api-reputation.yaml"
+      description: "Reputation lookup capability exposed as REST and MCP. Lead operation: queryEmailReputation."
+      apisCombined: [emailrep-api]
+      toolCount: 1
+      personas: [SecurityAnalyst, EmailAdmin, FraudAnalyst]
+      domains: [Email Reputation, Threat Intelligence]
+    - name: "EmailRep API — Reports"
+      file: "capabilities/emailrep-api-reports.yaml"
+      description: "Community report submission capability exposed as REST and MCP. Lead operation: reportEmail."
+      apisCombined: [emailrep-api]
+      toolCount: 1
+      personas: [SecurityAnalyst, ThreatHunter]
+      domains: [Reports, Threat Intelligence]
+
+  personas:
+    - id: SecurityAnalyst
+      name: "Security Analyst"
+      description: "Triages phishing and BEC alerts; uses EmailRep reputation as enrichment."
+      workflows: [emailrep-api-reputation, emailrep-api-reports]
+    - id: EmailAdmin
+      name: "Email Administrator"
+      description: "Manages inbound mail flow and abuse handling."
+      workflows: [emailrep-api-reputation]
+    - id: FraudAnalyst
+      name: "Fraud Analyst"
+      description: "Validates sign-up email addresses against reputation and disposable-provider signals."
+      workflows: [emailrep-api-reputation]
+    - id: ThreatHunter
+      name: "Threat Hunter"
+      description: "Submits observed malicious email behavior back into the reputation graph."
+      workflows: [emailrep-api-reports]
+
+  domains:
+    - name: Email Reputation
+      description: "Reputation, references, and intelligence signals for email addresses."
+      resources: [email]
+      workflows: [emailrep-api-reputation]
+    - name: Threat Intelligence
+      description: "Crowd-sourced abuse signals across the EmailRep graph."
+      resources: [email, report]
+      workflows: [emailrep-api-reputation, emailrep-api-reports]
+    - name: Reports
+      description: "Submitting malicious-email observations into the graph."
+      resources: [report]
+      workflows: [emailrep-api-reports]
+
+  namespaces:
+    - consumed: emailrep-api-reputation
+      rest: emailrep-api-reputation-rest
+      mcp: emailrep-api-reputation-mcp
+      restPort: 8080
+      mcpPort: 9090
+    - consumed: emailrep-api-reports
+      rest: emailrep-api-reports-rest
+      mcp: emailrep-api-reports-mcp
+      restPort: 8080
+      mcpPort: 9090
+
+  binds:
+    - name: EMAILREP_API_KEY
+      description: "EmailRep API key from emailrep.io/key."
+      usedBy: [emailrep-api-reputation, emailrep-api-reports]
+
+# CROSS-REFERENCE
+crossReference:
+  - resource: email
+    api: emailrep-api
+    operations: [queryEmailReputation]
+    workflows: [emailrep-api-reputation]
+    personas: [SecurityAnalyst, EmailAdmin, FraudAnalyst]
+  - resource: report
+    api: emailrep-api
+    operations: [reportEmail]
+    workflows: [emailrep-api-reports]
+    personas: [SecurityAnalyst, ThreatHunter]

@@ -1,0 +1,429 @@
+# EmailRep Spectral Ruleset
+#
+# Opinionated rules enforcing EmailRep / Sublime Security API conventions
+# across the openapi/ directory of this repository. The EmailRep API surface
+# is small (GET /{email}, POST /report) but its conventions still matter:
+# snake_case JSON properties, camelCase operationIds, a `Key` header for
+# authentication, JSON request/response bodies, and an EmailRep title/summary
+# prefix.
+
+extends: spectral:oas
+
+rules:
+
+  # ─────────────────────────────────────────────────────────────
+  # INFO / METADATA
+  # ─────────────────────────────────────────────────────────────
+
+  info-title-prefix:
+    description: The info.title must start with "EmailRep".
+    given: $.info.title
+    severity: error
+    then:
+      function: pattern
+      functionOptions:
+        match: '^EmailRep( .*)?$'
+
+  info-description-required:
+    description: The info.description is required and must be at least 80 characters.
+    given: $.info
+    severity: error
+    then:
+      - field: description
+        function: truthy
+      - field: description
+        function: length
+        functionOptions:
+          min: 80
+
+  info-version-required:
+    description: The info.version is required.
+    given: $.info
+    severity: error
+    then:
+      field: version
+      function: truthy
+
+  info-contact-required:
+    description: The info.contact block must be present with url or email.
+    given: $.info
+    severity: warn
+    then:
+      field: contact
+      function: truthy
+
+  info-license-required:
+    description: The info.license block must be present.
+    given: $.info
+    severity: warn
+    then:
+      field: license
+      function: truthy
+
+  # ─────────────────────────────────────────────────────────────
+  # OPENAPI VERSION
+  # ─────────────────────────────────────────────────────────────
+
+  openapi-version-3:
+    description: OpenAPI version must be 3.0.x or higher.
+    given: $.openapi
+    severity: error
+    then:
+      function: pattern
+      functionOptions:
+        match: '^3\.'
+
+  # ─────────────────────────────────────────────────────────────
+  # SERVERS
+  # ─────────────────────────────────────────────────────────────
+
+  servers-defined:
+    description: At least one server URL must be defined.
+    given: $.servers
+    severity: error
+    then:
+      function: truthy
+
+  servers-https-only:
+    description: Server URLs must use HTTPS.
+    given: $.servers[*].url
+    severity: error
+    then:
+      function: pattern
+      functionOptions:
+        match: '^https://'
+
+  servers-emailrep-host:
+    description: EmailRep API server host must be https://emailrep.io.
+    given: $.servers[*].url
+    severity: warn
+    then:
+      function: pattern
+      functionOptions:
+        match: '^https://emailrep\.io'
+
+  # ─────────────────────────────────────────────────────────────
+  # PATHS — NAMING CONVENTIONS
+  # ─────────────────────────────────────────────────────────────
+
+  paths-kebab-case:
+    description: Path segments must be lowercase kebab-case or path templates.
+    given: $.paths[*]~
+    severity: warn
+    then:
+      function: pattern
+      functionOptions:
+        match: '^/([a-z0-9-]+|\{[a-zA-Z_]+\})(/([a-z0-9-]+|\{[a-zA-Z_]+\}))*$'
+
+  paths-no-trailing-slash:
+    description: Paths must not end with a trailing slash.
+    given: $.paths[*]~
+    severity: error
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: '.+/$'
+
+  paths-no-query-string:
+    description: Paths must not include query strings — declare parameters instead.
+    given: $.paths[*]~
+    severity: error
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: '\?'
+
+  # ─────────────────────────────────────────────────────────────
+  # OPERATIONS
+  # ─────────────────────────────────────────────────────────────
+
+  operation-summary-required:
+    description: Every operation must have a summary.
+    given: $.paths[*][get,post,put,patch,delete]
+    severity: error
+    then:
+      field: summary
+      function: truthy
+
+  operation-summary-prefix:
+    description: Operation summaries must start with "EmailRep".
+    given: $.paths[*][get,post,put,patch,delete].summary
+    severity: warn
+    then:
+      function: pattern
+      functionOptions:
+        match: '^EmailRep '
+
+  operation-description-required:
+    description: Every operation must have a description of at least 30 characters.
+    given: $.paths[*][get,post,put,patch,delete]
+    severity: warn
+    then:
+      - field: description
+        function: truthy
+      - field: description
+        function: length
+        functionOptions:
+          min: 30
+
+  operation-operationid-required:
+    description: Every operation must have an operationId.
+    given: $.paths[*][get,post,put,patch,delete]
+    severity: error
+    then:
+      field: operationId
+      function: truthy
+
+  operation-operationid-camel-case:
+    description: operationId must be camelCase starting with a lowercase verb.
+    given: $.paths[*][get,post,put,patch,delete].operationId
+    severity: warn
+    then:
+      function: pattern
+      functionOptions:
+        match: '^[a-z][a-zA-Z0-9]+$'
+
+  operation-tags-required:
+    description: Every operation must declare at least one tag.
+    given: $.paths[*][get,post,put,patch,delete]
+    severity: warn
+    then:
+      field: tags
+      function: truthy
+
+  operation-microcks-extension:
+    description: Operations should include an x-microcks-operation extension for mock-server compatibility.
+    given: $.paths[*][get,post,put,patch,delete]
+    severity: info
+    then:
+      field: x-microcks-operation
+      function: truthy
+
+  # ─────────────────────────────────────────────────────────────
+  # TAGS
+  # ─────────────────────────────────────────────────────────────
+
+  tags-global-defined:
+    description: A global tags array must be defined.
+    given: $.tags
+    severity: warn
+    then:
+      function: truthy
+
+  tag-description-required:
+    description: Each tag must have a description.
+    given: $.tags[*]
+    severity: warn
+    then:
+      field: description
+      function: truthy
+
+  tag-title-case:
+    description: Tag names must be Title Case (e.g., "Reputation", "Reports").
+    given: $.tags[*].name
+    severity: warn
+    then:
+      function: pattern
+      functionOptions:
+        match: '^[A-Z][a-zA-Z]*( [A-Z][a-zA-Z]*)*$'
+
+  # ─────────────────────────────────────────────────────────────
+  # PARAMETERS
+  # ─────────────────────────────────────────────────────────────
+
+  parameter-description-required:
+    description: Every parameter must have a description.
+    given: $.paths[*][*].parameters[*]
+    severity: warn
+    then:
+      field: description
+      function: truthy
+
+  parameter-snake-case:
+    description: Parameter names must use snake_case or be email path tokens.
+    given: $.paths[*][*].parameters[*].name
+    severity: info
+    then:
+      function: pattern
+      functionOptions:
+        match: '^[a-z][a-z0-9_]*$'
+
+  parameter-no-apikey-in-query:
+    description: API keys must be passed in the `Key` header, not in query parameters.
+    given: $.paths[*][*].parameters[?(@.in=="query")].name
+    severity: error
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: '(?i)(api_?key|apikey|key|token)'
+
+  # ─────────────────────────────────────────────────────────────
+  # REQUEST BODIES
+  # ─────────────────────────────────────────────────────────────
+
+  request-body-json-only:
+    description: Request bodies must be application/json.
+    given: $.paths[*][post,put,patch].requestBody.content
+    severity: error
+    then:
+      field: application/json
+      function: truthy
+
+  request-body-description:
+    description: Request bodies should have a description.
+    given: $.paths[*][post,put,patch].requestBody
+    severity: warn
+    then:
+      field: description
+      function: truthy
+
+  # ─────────────────────────────────────────────────────────────
+  # RESPONSES
+  # ─────────────────────────────────────────────────────────────
+
+  response-success-required:
+    description: Every operation must define a 2xx success response.
+    given: $.paths[*][get,post,put,patch,delete].responses
+    severity: error
+    then:
+      field: '200'
+      function: truthy
+
+  response-error-401-required:
+    description: Operations should document a 401 Unauthorized response.
+    given: $.paths[*][get,post,put,patch,delete].responses
+    severity: warn
+    then:
+      field: '401'
+      function: truthy
+
+  response-error-429-required:
+    description: Operations should document a 429 rate-limit response (EmailRep enforces quotas).
+    given: $.paths[*][get,post,put,patch,delete].responses
+    severity: warn
+    then:
+      field: '429'
+      function: truthy
+
+  response-description-required:
+    description: Every response must have a description.
+    given: $.paths[*][*].responses[*]
+    severity: error
+    then:
+      field: description
+      function: truthy
+
+  response-json-content:
+    description: 2xx responses must declare application/json content.
+    given: $.paths[*][*].responses.200.content
+    severity: error
+    then:
+      field: application/json
+      function: truthy
+
+  # ─────────────────────────────────────────────────────────────
+  # SCHEMAS — PROPERTY NAMING
+  # ─────────────────────────────────────────────────────────────
+
+  schema-property-snake-case:
+    description: JSON schema property names must use snake_case.
+    given: $.components.schemas[*].properties[*]~
+    severity: warn
+    then:
+      function: pattern
+      functionOptions:
+        match: '^[a-z][a-z0-9_]*$'
+
+  schema-description-required:
+    description: Top-level schemas should have a description.
+    given: $.components.schemas[*]
+    severity: warn
+    then:
+      field: description
+      function: truthy
+
+  schema-property-type-required:
+    description: Each property must declare a type (or be a $ref).
+    given: $.components.schemas[*].properties[*]
+    severity: warn
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          anyOf:
+            - required: [type]
+            - required: ['$ref']
+
+  # ─────────────────────────────────────────────────────────────
+  # SECURITY
+  # ─────────────────────────────────────────────────────────────
+
+  security-global-defined:
+    description: A global security array must be defined.
+    given: $
+    severity: warn
+    then:
+      field: security
+      function: truthy
+
+  security-scheme-defined:
+    description: At least one securityScheme must be defined.
+    given: $.components.securitySchemes
+    severity: error
+    then:
+      function: truthy
+
+  security-apikey-key-header:
+    description: EmailRep authentication uses the `Key` header (not Authorization, not X-API-Key).
+    given: $.components.securitySchemes[?(@.type=="apiKey")]
+    severity: warn
+    then:
+      field: name
+      function: pattern
+      functionOptions:
+        match: '^Key$'
+
+  # ─────────────────────────────────────────────────────────────
+  # HTTP METHOD CONVENTIONS
+  # ─────────────────────────────────────────────────────────────
+
+  get-no-request-body:
+    description: GET operations must not declare a request body.
+    given: $.paths[*].get.requestBody
+    severity: error
+    then:
+      function: falsy
+
+  delete-no-request-body:
+    description: DELETE operations should not declare a request body.
+    given: $.paths[*].delete.requestBody
+    severity: warn
+    then:
+      function: falsy
+
+  post-has-request-body:
+    description: POST operations should declare a request body.
+    given: $.paths[*].post
+    severity: warn
+    then:
+      field: requestBody
+      function: truthy
+
+  # ─────────────────────────────────────────────────────────────
+  # GENERAL QUALITY
+  # ─────────────────────────────────────────────────────────────
+
+  no-empty-descriptions:
+    description: Descriptions must not be empty strings.
+    given: $..description
+    severity: warn
+    then:
+      function: truthy
+
+  examples-encouraged:
+    description: Schema properties and operations should include examples where possible.
+    given: $.components.schemas[*].properties[*]
+    severity: info
+    then:
+      field: example
+      function: truthy

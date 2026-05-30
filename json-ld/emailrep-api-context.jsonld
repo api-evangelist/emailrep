@@ -1,0 +1,155 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "emailrep": "https://emailrep.io/schema/",
+    "schema": "https://schema.org/",
+    "dcterms": "http://purl.org/dc/terms/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "EmailReputationDetails": "emailrep:EmailReputationDetails",
+    "EmailReputation": "emailrep:EmailReputation",
+    "ReportRequest": "emailrep:ReportRequest",
+    "ReportResponse": "emailrep:ReportResponse",
+    "acceptAll": {
+      "@id": "emailrep:accept_all",
+      "@type": "xsd:boolean"
+    },
+    "blacklisted": {
+      "@id": "emailrep:blacklisted",
+      "@type": "xsd:boolean"
+    },
+    "credentialsLeaked": {
+      "@id": "emailrep:credentials_leaked",
+      "@type": "xsd:boolean"
+    },
+    "credentialsLeakedRecent": {
+      "@id": "emailrep:credentials_leaked_recent",
+      "@type": "xsd:boolean"
+    },
+    "dataBreach": {
+      "@id": "emailrep:data_breach",
+      "@type": "xsd:boolean"
+    },
+    "daysSinceDomainCreation": {
+      "@id": "emailrep:days_since_domain_creation",
+      "@type": "xsd:integer"
+    },
+    "deliverable": {
+      "@id": "emailrep:deliverable",
+      "@type": "xsd:boolean"
+    },
+    "description": {
+      "@id": "schema:description",
+      "@type": "xsd:string"
+    },
+    "details": {
+      "@id": "emailrep:details",
+      "@type": "@id"
+    },
+    "disposable": {
+      "@id": "emailrep:disposable",
+      "@type": "xsd:boolean"
+    },
+    "dmarcEnforced": {
+      "@id": "emailrep:dmarc_enforced",
+      "@type": "xsd:boolean"
+    },
+    "domainExists": {
+      "@id": "emailrep:domain_exists",
+      "@type": "xsd:boolean"
+    },
+    "domainReputation": {
+      "@id": "emailrep:domain_reputation",
+      "@type": "xsd:string"
+    },
+    "email": {
+      "@id": "schema:email",
+      "@type": "xsd:string"
+    },
+    "expires": {
+      "@id": "emailrep:expires",
+      "@type": "xsd:integer"
+    },
+    "firstSeen": {
+      "@id": "emailrep:first_seen",
+      "@type": "xsd:string"
+    },
+    "freeProvider": {
+      "@id": "emailrep:free_provider",
+      "@type": "xsd:boolean"
+    },
+    "lastSeen": {
+      "@id": "emailrep:last_seen",
+      "@type": "xsd:string"
+    },
+    "maliciousActivity": {
+      "@id": "emailrep:malicious_activity",
+      "@type": "xsd:boolean"
+    },
+    "maliciousActivityRecent": {
+      "@id": "emailrep:malicious_activity_recent",
+      "@type": "xsd:boolean"
+    },
+    "newDomain": {
+      "@id": "emailrep:new_domain",
+      "@type": "xsd:boolean"
+    },
+    "profiles": {
+      "@id": "emailrep:profiles",
+      "@container": "@set",
+      "@type": "xsd:string"
+    },
+    "reason": {
+      "@id": "emailrep:reason",
+      "@type": "xsd:string"
+    },
+    "references": {
+      "@id": "emailrep:references",
+      "@type": "xsd:integer"
+    },
+    "reputation": {
+      "@id": "emailrep:reputation",
+      "@type": "xsd:string"
+    },
+    "spam": {
+      "@id": "emailrep:spam",
+      "@type": "xsd:boolean"
+    },
+    "spfStrict": {
+      "@id": "emailrep:spf_strict",
+      "@type": "xsd:boolean"
+    },
+    "spoofable": {
+      "@id": "emailrep:spoofable",
+      "@type": "xsd:boolean"
+    },
+    "status": {
+      "@id": "emailrep:status",
+      "@type": "xsd:string"
+    },
+    "summary": {
+      "@id": "emailrep:summary",
+      "@type": "xsd:string"
+    },
+    "suspicious": {
+      "@id": "emailrep:suspicious",
+      "@type": "xsd:boolean"
+    },
+    "suspiciousTld": {
+      "@id": "emailrep:suspicious_tld",
+      "@type": "xsd:boolean"
+    },
+    "tags": {
+      "@id": "emailrep:tags",
+      "@container": "@set",
+      "@type": "xsd:string"
+    },
+    "timestamp": {
+      "@id": "emailrep:timestamp",
+      "@type": "xsd:integer"
+    },
+    "validMx": {
+      "@id": "emailrep:valid_mx",
+      "@type": "xsd:boolean"
+    }
+  }
+}

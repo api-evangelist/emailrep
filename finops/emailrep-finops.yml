@@ -1,0 +1,116 @@
+specification: FinOps Framework
+specificationVersion: '1.0'
+schema: https://www.finops.org/framework/
+provider: EmailRep
+providerId: emailrep
+created: '2026-05-30'
+modified: '2026-05-30'
+reconciled: true
+tags:
+  - FinOps
+  - FOCUS
+  - Security
+  - Email Reputation
+  - Threat Intelligence
+description: >-
+  FOCUS-aligned FinOps for EmailRep: a low-cost SaaS API with a free
+  community tier, a flat $20/month Commercial subscription, and custom
+  Enterprise contracts. Billing is a hybrid of subscription (Commercial,
+  Enterprise) and quota allowance (queries/month, queries/day) — usage
+  beyond the quota is not metered; it is throttled at the rate-limit layer.
+sources:
+  - https://emailrep.io
+  - https://emailrep.io/key
+  - https://docs.sublimesecurity.com/reference/emailrep-introduction
+alignedWith:
+  framework: FinOps Foundation Framework
+  frameworkUrl: https://www.finops.org/framework/
+  dataSpec: FOCUS
+  dataSpecVersion: '1.3'
+  dataSpecUrl: https://focus.finops.org/focus-specification/v1-3/
+publisherName: Sublime Security, Inc.
+serviceCategory: Identity + Security + Email Reputation
+billingModel:
+  pricingCategory: Subscription + Free Tier
+  billingFrequency: Monthly
+  billingCurrency: USD
+  chargeCategories:
+    - Usage
+    - Purchase
+    - Tax
+focusColumns:
+  ServiceName: EmailRep
+  ServiceCategory: Identity + Security + Email Reputation
+  ServiceSubcategory: Email Reputation API
+  ProviderName: Sublime Security
+  PublisherName: Sublime Security, Inc.
+  InvoiceIssuerName: Sublime Security, Inc.
+  BillingCurrency: USD
+meters:
+  - name: emailrep_queries
+    unit: request
+    aggregation: count
+    dimensions:
+      - plan
+      - api_key
+    description: >-
+      Reputation lookup queries (GET /{email}). Counted against the per-key
+      monthly quota for the active plan.
+  - name: emailrep_queries_daily
+    unit: request
+    aggregation: count
+    dimensions:
+      - plan
+      - api_key
+    description: >-
+      Daily query count used to enforce the 10/day Community ceiling.
+  - name: emailrep_reports
+    unit: report
+    aggregation: count
+    dimensions:
+      - plan
+      - api_key
+    description: >-
+      Community report submissions (POST /report). Available to keyed
+      callers; not billed separately but counted for fair-use enforcement.
+  - name: emailrep_subscription_month
+    unit: month
+    aggregation: sum
+    dimensions:
+      - plan
+    description: >-
+      Monthly Commercial-tier subscription line at $20/month per API key.
+  - name: emailrep_enterprise_contract
+    unit: varies
+    aggregation: sum
+    dimensions:
+      - contract_id
+      - plan
+    description: >-
+      Enterprise contract billing — quota size, support SLA, and term are
+      negotiated per customer.
+principles:
+  - name: Visibility
+    description: >-
+      Each EmailRep API key has a console at https://emailrep.io showing
+      monthly and daily usage. Commercial-tier customers receive billing
+      invoices via Sublime Security; Enterprise customers receive monthly
+      usage reports per contract.
+  - name: Allocation
+    description: >-
+      Allocate cost by API key. Provision separate keys per team
+      (security-ops, fraud, marketing) so usage and the $20/month
+      Commercial subscription can be attributed to the right cost center.
+  - name: Optimization
+    description: >-
+      For most analyst workloads the 250-query Free tier or the
+      $20/month/1,000-query Commercial tier is sufficient. Move to
+      Enterprise only when sustained throughput exceeds the Commercial
+      quota; otherwise cache and dedupe lookups upstream (most phishing
+      triage workflows query the same domains repeatedly).
+  - name: Accountability
+    description: >-
+      Email Security and Threat-Intel teams own the EmailRep spend.
+      Marketing teams using EmailRep for deliverability/list-hygiene
+      should hold their own API key and budget line to keep
+      attack-defense and marketing usage separated for audit.

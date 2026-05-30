@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-structure.org/meta/core/v0/#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/emailrep/refs/heads/main/json-structure/api-report-response-structure.json",
+  "name": "ReportResponse",
+  "description": "Outcome of a report submission.",
+  "type": "object",
+  "properties": {
+    "status": {
+      "type": "string",
+      "description": "Outcome of the report submission.",
+      "enum": [
+        "success",
+        "fail"
+      ],
+      "example": "success"
+    },
+    "reason": {
+      "type": "string",
+      "description": "Human-readable failure reason. Present when `status` is `fail`.",
+      "example": "invalid email address"
+    }
+  },
+  "required": [
+    "status"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "email": "attacker@example.com",
+  "tags": [
+    "bec",
+    "maldoc"
+  ],
+  "description": "Phishing email impersonating the CEO with a malicious attachment.",
+  "timestamp": 1748563200,
+  "expires": 168
+}

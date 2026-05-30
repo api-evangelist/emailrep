@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/emailrep/refs/heads/main/json-schema/api-report-request-schema.json",
+  "title": "ReportRequest",
+  "description": "Payload for reporting an email address as exhibiting malicious behavior.",
+  "type": "object",
+  "properties": {
+    "email": {
+      "type": "string",
+      "format": "email",
+      "description": "The email address being reported.",
+      "example": "attacker@example.com"
+    },
+    "tags": {
+      "type": "array",
+      "description": "One or more tags classifying the malicious behavior.",
+      "items": {
+        "type": "string"
+      },
+      "example": [
+        "bec",
+        "maldoc"
+      ]
+    },
+    "description": {
+      "type": "string",
+      "description": "Additional information and context about the activity.",
+      "example": "Phishing email impersonating the CEO with a malicious attachment."
+    },
+    "timestamp": {
+      "type": "integer",
+      "format": "int64",
+      "description": "Unix epoch seconds when the activity occurred. Defaults to now.",
+      "example": 1748563200
+    },
+    "expires": {
+      "type": "integer",
+      "description": "Number of hours the reported email should be considered risky.",
+      "example": 168
+    }
+  },
+  "required": [
+    "email",
+    "tags"
+  ]
+}

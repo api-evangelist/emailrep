@@ -1,32 +1,293 @@
 aid: emailrep
 name: EmailRep
-description: "Email address threat and risk prediction"
-url: https://docs.emailrep.io/
-specificationVersion: '0.20'
-created: '2026-05-28'
-modified: '2026-05-28'
-x-source: public-apis/public-apis
-x-category: "Security"
-x-tier: 3
-x-tier-reason: bulk-registered-from-public-apis
+description: >-
+  EmailRep is an email address reputation and threat-intelligence API operated
+  by Sublime Security, Inc. It crawls and enriches data across social media
+  profiles, professional networking sites, dark-web credential leaks, data
+  breaches, phishing kits, phishing emails, spam lists, open mail relays, spam
+  traps, domain age and reputation, and email-deliverability signals to predict
+  the risk associated with any email address. The free, JSON-over-HTTP REST API
+  returns a `reputation`, a `suspicious` flag, a `references` count, and a
+  detailed signal block (blacklisted, malicious_activity, credentials_leaked,
+  data_breach, domain_reputation, deliverable, spoofable, profiles, and more).
+  A POST `/report` endpoint lets analysts contribute observations of malicious
+  email behavior back into the reputation graph.
+type: Index
+image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
 tags:
   - Security
+  - Email
+  - Email Reputation
+  - Threat Intelligence
+  - Phishing
+  - Fraud Prevention
+  - Anti-Abuse
+  - Deliverability
+  - Risk Scoring
   - Public APIs
+url: https://raw.githubusercontent.com/api-evangelist/emailrep/refs/heads/main/apis.yml
+created: '2026-05-28'
+modified: '2026-05-30'
+specificationVersion: '0.20'
+x-source: public-apis/public-apis
+x-category: Security
+x-tier: 2
+x-tier-reason: enriched-from-stub
 apis:
-  - name: EmailRep
-    description: "Email address threat and risk prediction"
-    humanURL: https://docs.emailrep.io/
-    baseURL: https://docs.emailrep.io/
+  - aid: emailrep:emailrep-api
+    name: EmailRep API
+    description: >-
+      Email reputation and threat-intelligence REST API. `GET /{email}` returns
+      a reputation verdict (high/medium/low/none), a `suspicious` flag, a
+      `references` count, and a detailed signal block covering blacklisting,
+      malicious activity, credential leaks, data breaches, domain age and
+      reputation, deliverability, MX validity, SPF/DMARC posture,
+      spoofability, free-provider/disposable status, and known online
+      profiles. `POST /report` lets authenticated callers report an email
+      address as malicious (BEC, phishing, fraud, account takeover, maldoc,
+      etc.) so the signal feeds the reputation graph. Authentication is via a
+      `Key` header issued from emailrep.io/key. Free tier: 250 queries/month,
+      10/day; Commercial tier: 1,000 queries/month at $20/month with no daily
+      limit; Enterprise: high-volume custom plans with SLA.
+    humanURL: https://emailrep.io
+    baseURL: https://emailrep.io
     tags:
-      - Security
+      - Email Reputation
+      - Threat Intelligence
+      - Phishing
+      - Fraud
+      - Deliverability
     properties:
       - type: Documentation
-        url: https://docs.emailrep.io/
+        url: https://docs.sublimesecurity.com/reference/emailrep-introduction
+      - type: APIReference
+        url: https://docs.sublimesecurity.com/reference/emailrep-introduction
+      - type: GettingStarted
+        url: https://docs.sublimesecurity.com/reference/emailrep-quickstart
+      - type: OpenAPI
+        url: openapi/emailrep-api-openapi.yml
+      - type: SDK
+        title: Python SDK
+        url: https://github.com/sublime-security/emailrep.io-python
+      - type: SDK
+        title: Python Package
+        url: https://pypi.org/project/emailrep/
+      - type: SDK
+        title: PowerShell SDK (community)
+        url: https://github.com/arnydo/PSEmailRep
+      - type: SDK
+        title: R SDK (community)
+        url: https://git.rud.is/hrbrmstr/emailrep
+      - type: SDK
+        title: .NET SDK (community)
+        url: https://github.com/WestDiscGolf/EmailRep.NET
+      - type: SDK
+        title: Go SDK (community)
+        url: https://github.com/kaiiyer/emailrep
+      - type: SDK
+        title: Go SDK (community, vertoforce)
+        url: https://github.com/vertoforce/go-emailrep
+      - type: CLI
+        url: https://github.com/sublime-security/emailrep.io-python
+      - type: SourceCode
+        url: https://github.com/sublime-security/emailrep.io
+      - type: NaftikoCapability
+        url: capabilities/emailrep-api-reputation.yaml
+      - type: NaftikoCapability
+        url: capabilities/emailrep-api-reports.yaml
 common:
   - type: Website
-    url: https://docs.emailrep.io/
+    url: https://emailrep.io
+  - type: Documentation
+    url: https://docs.sublimesecurity.com/reference/emailrep-introduction
+  - type: APIReference
+    url: https://docs.sublimesecurity.com/reference/emailrep-introduction
+  - type: GettingStarted
+    url: https://docs.sublimesecurity.com/reference/emailrep-quickstart
+  - type: SignUp
+    url: https://emailrep.io/key
+  - type: Pricing
+    url: https://emailrep.io/key
+  - type: TermsOfService
+    url: https://emailrep.io/terms
+  - type: PrivacyPolicy
+    url: https://emailrep.io/privacy
+  - type: Blog
+    url: https://emailrep.io/blog
+  - type: Support
+    url: https://sublimesecurity.com/contact
+  - type: GitHubOrganization
+    url: https://github.com/sublime-security
+  - type: SourceCode
+    url: https://github.com/sublime-security/emailrep.io
+  - type: Operator
+    url: https://sublimesecurity.com
+  - type: LinkedIn
+    url: https://www.linkedin.com/company/sublime-security
   - type: PublicAPIsListing
     url: https://github.com/public-apis/public-apis
+  - type: Tools
+    title: Sublime Platform
+    url: https://github.com/sublime-security/sublime-platform
+  - type: Tools
+    title: Sublime Rules
+    url: https://github.com/sublime-security/sublime-rules
+  - type: Tools
+    title: Sublime CLI
+    url: https://github.com/sublime-security/sublime-cli
+  - type: Tools
+    title: OpenCTI Connectors
+    url: https://github.com/sublime-security/connectors
+  - type: Tools
+    title: MQL VS Code Extension
+    url: https://github.com/sublime-security/mql-vscode
+  - type: Tools
+    title: ICS Phishing Toolkit
+    url: https://github.com/sublime-security/ics-phishing-toolkit
+  - type: Tools
+    title: Strelka File Scanning
+    url: https://github.com/sublime-security/strelka
+  - type: Tutorials
+    title: Detection Engineering Workshop
+    url: https://github.com/sublime-security/detection-workshop
+  - type: Plans
+    url: plans/emailrep-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/emailrep-rate-limits.yml
+  - type: FinOps
+    url: finops/emailrep-finops.yml
+  - type: Vocabulary
+    url: vocabulary/emailrep-vocabulary.yml
+  - type: SpectralRuleset
+    url: rules/emailrep-spectral-rules.yml
+  - type: JSONSchema
+    url: json-schema/api-email-reputation-schema.json
+  - type: JSONSchema
+    url: json-schema/api-email-reputation-details-schema.json
+  - type: JSONSchema
+    url: json-schema/api-report-request-schema.json
+  - type: JSONSchema
+    url: json-schema/api-report-response-schema.json
+  - type: JSONStructure
+    url: json-structure/api-email-reputation-structure.json
+  - type: JSONStructure
+    url: json-structure/api-email-reputation-details-structure.json
+  - type: JSONStructure
+    url: json-structure/api-report-request-structure.json
+  - type: JSONStructure
+    url: json-structure/api-report-response-structure.json
+  - type: JSONLD
+    url: json-ld/emailrep-api-context.jsonld
+  - type: Examples
+    url: examples/api-email-reputation-example.json
+  - type: Examples
+    url: examples/api-email-reputation-details-example.json
+  - type: Examples
+    url: examples/api-report-request-example.json
+  - type: Examples
+    url: examples/api-report-response-example.json
+features:
+  - name: Reputation Verdict
+    description: >-
+      Each email lookup returns a `reputation` of `high`, `medium`, `low`, or
+      `none` summarizing the overall trust signal for the address.
+  - name: Suspicious Flag
+    description: >-
+      A boolean `suspicious` field indicates whether the email should be
+      treated as risky based on combined positive and negative signals.
+  - name: References Count
+    description: >-
+      `references` is the total number of positive and negative reputation
+      sources observed for the address or its associated domain.
+  - name: Credential-Leak and Breach Signals
+    description: >-
+      Detects whether the email has appeared in known data breaches, dark-web
+      credential leaks, or pastes — historically and within the last 90 days.
+  - name: Domain Reputation and Age
+    description: >-
+      Reports `domain_exists`, `domain_reputation`, `new_domain`, and
+      `days_since_domain_creation` so callers can weight reputation against
+      domain freshness.
+  - name: Deliverability and Mail-Server Posture
+    description: >-
+      Reports `deliverable`, `accept_all`, `valid_mx`, `spoofable`,
+      `spf_strict`, and `dmarc_enforced` for both fraud prevention and
+      legitimate sender hygiene.
+  - name: Provider Classification
+    description: >-
+      Classifies the address as `free_provider`, `disposable`,
+      `suspicious_tld`, or `spam` to expose throwaway or low-quality
+      accounts.
+  - name: Online Profile Discovery
+    description: >-
+      Returns a `profiles` array enumerating social and professional
+      networking sites where the email has been observed.
+  - name: Crowd-Sourced Reporting
+    description: >-
+      `POST /report` accepts community submissions of malicious email
+      behavior (BEC, phishing, fraud, account takeover, maldoc) with tags,
+      description, timestamp, and an expires window so signal feeds the
+      reputation graph.
+useCases:
+  - name: Phishing and BEC Detection
+    description: >-
+      Score inbound emails against EmailRep to identify suspicious senders,
+      brand-spoofing attempts, and targeted Business Email Compromise.
+  - name: Account-Signup Abuse Prevention
+    description: >-
+      Block or step-up disposable, throwaway, or known-malicious email
+      addresses during user registration to reduce fraud and abuse.
+  - name: Marketing List Hygiene
+    description: >-
+      Validate deliverability, catch-all status, and disposable-provider use
+      on inbound or outbound marketing lists to protect sender reputation.
+  - name: Threat-Intelligence Enrichment
+    description: >-
+      Enrich SIEM, SOAR, and case-management workflows with email reputation
+      signals alongside netflow, EDR, and email-gateway telemetry.
+  - name: Sender-Reputation Self-Check
+    description: >-
+      Marketing, sales, and outbound teams can verify their own addresses to
+      ensure they aren't trapped on spam lists or blocklists.
+  - name: Red-Team and Recon
+    description: >-
+      Authorized offensive-security teams can profile target email addresses
+      for credential brute forcing and targeted phishing-engagement design.
+integrations:
+  - name: Sublime Platform
+    description: >-
+      Native consumer of EmailRep signals inside the Sublime Security email
+      detection-and-response platform for inbound email threat hunting and
+      response.
+  - name: Sublime Rules
+    description: >-
+      Open-source MQL detection rules in github.com/sublime-security/sublime-rules
+      can call EmailRep enrichment as part of email-attack detection.
+  - name: OpenCTI Connectors
+    description: >-
+      EmailRep enrichment is callable from threat-intel platforms via the
+      Sublime-maintained OpenCTI connectors repo.
+  - name: SOAR Playbooks
+    description: >-
+      EmailRep is widely used as an enrichment node in SOAR products
+      (Tines, Splunk SOAR, Cortex XSOAR, Torq) for phishing triage.
+  - name: Python, PowerShell, R, .NET, Go SDKs
+    description: >-
+      First-party Python SDK plus community-maintained PowerShell, R, .NET,
+      and Go libraries make EmailRep callable from analyst tooling.
+solutions:
+  - name: Email Threat Intelligence
+    description: >-
+      Reputation, breach exposure, and online-profile signals on any email
+      address, queryable in a single HTTP call.
+  - name: Account-Takeover and Fraud Prevention
+    description: >-
+      Disposable, free-provider, new-domain, and recent-credential-leak
+      signals support sign-up abuse and ATO defenses.
+  - name: Email Hygiene and Deliverability Insight
+    description: >-
+      Deliverable, accept-all, MX, SPF, and DMARC signals support
+      marketing, sales, and IT-ops list hygiene work.
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com

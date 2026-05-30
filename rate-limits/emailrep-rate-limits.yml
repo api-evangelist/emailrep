@@ -1,0 +1,85 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
+provider: EmailRep
+providerId: emailrep
+created: '2026-05-30'
+modified: '2026-05-30'
+reconciled: true
+tags:
+  - Rate Limiting
+  - Email Reputation
+  - Threat Intelligence
+  - Security
+description: >-
+  EmailRep enforces rate limits per API key. The Free (Community) tier is
+  capped at 250 queries per month with a 10-queries-per-day daily ceiling.
+  The Commercial tier raises the monthly quota to 1,000 and removes the
+  daily cap. Enterprise plans negotiate high-volume quotas with SLAs.
+  Anonymous (no API key) queries are heavily rate-limited per IP and are
+  intended for ad-hoc lookups via the emailrep.io web UI. Rate-limit
+  enforcement returns 429 Too Many Requests; submit reports and reputation
+  queries should back off and retry with exponential delay when throttled.
+sources:
+  - https://emailrep.io
+  - https://emailrep.io/key
+  - https://docs.sublimesecurity.com/reference/emailrep-introduction
+responseCodes:
+  throttled: 429
+  quotaExceeded: 429
+headers:
+  retryAfter: Retry-After
+limits:
+  - name: Anonymous (no API key)
+    scope: IP
+    metric: requests_per_day
+    limit: low (intended for ad-hoc lookups via the web UI)
+    notes: >-
+      Anonymous lookups are rate-limited per IP. For programmatic use, sign
+      up for a free API key at https://emailrep.io/key.
+  - name: Free Community Tier (with API key)
+    scope: key
+    metric: requests_per_month
+    limit: 250
+    timeFrame: month
+    notes: >-
+      Free tier quota. Combined with a 10-query-per-day ceiling.
+  - name: Free Community Tier Daily Ceiling
+    scope: key
+    metric: requests_per_day
+    limit: 10
+    timeFrame: day
+    notes: Daily ceiling that applies on top of the monthly quota.
+  - name: Commercial Tier
+    scope: key
+    metric: requests_per_month
+    limit: 1000
+    timeFrame: month
+    notes: $20/month commercial subscription. No daily cap.
+  - name: Enterprise Tier
+    scope: key
+    metric: requests_per_month
+    limit: see contract
+    notes: High-volume quota negotiated per Enterprise contract with SLA-backed support.
+policies:
+  - name: API Key Required For Reports
+    description: >-
+      The POST /report endpoint requires an API key. Anonymous report
+      submission is not supported.
+  - name: Tier-Based Scoping
+    description: >-
+      Rate limits are bound to the API key. Each key carries one of the
+      Free, Commercial, or Enterprise quotas.
+  - name: 429 Retry With Backoff
+    description: >-
+      When a quota or per-day ceiling is exceeded the API returns 429.
+      Callers should back off with exponential delay and retry on the next
+      window (next day for Free, next month for paid).
+  - name: Raise Via Support
+    description: >-
+      Commercial and Enterprise quotas can be raised by contacting Sublime
+      Security through the contact form at sublimesecurity.com/contact.
+  - name: Web UI Lookups
+    description: >-
+      The emailrep.io web UI provides ad-hoc lookups for security analysts
+      without an API key, subject to per-IP throttling.

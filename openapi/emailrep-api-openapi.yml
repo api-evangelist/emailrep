@@ -1,0 +1,450 @@
+openapi: 3.0.3
+info:
+  title: EmailRep API
+  version: '1.0'
+  description: >-
+    EmailRep is an email-address reputation and threat-intelligence API
+    operated by Sublime Security, Inc. It crawls and enriches data across
+    social media profiles, professional networking sites, dark-web credential
+    leaks, data breaches, phishing kits, phishing emails, spam lists, open
+    mail relays, spam traps, domain age and reputation, and deliverability
+    signals to predict the risk associated with any email address. Callers
+    issue a `GET /{email}` lookup to receive a reputation verdict, a
+    `suspicious` flag, a `references` count, and a detailed signal block, or
+    `POST /report` to submit observations of malicious email behavior back
+    into the reputation graph.
+  contact:
+    name: Sublime Security
+    url: https://sublimesecurity.com
+    email: support@sublimesecurity.com
+  license:
+    name: EmailRep Terms of Use
+    url: https://emailrep.io/terms
+  x-generated-from: documentation
+  x-last-validated: '2026-05-30'
+servers:
+  - url: https://emailrep.io
+    description: EmailRep production API
+security:
+  - ApiKeyAuth: []
+  - {}
+tags:
+  - name: Reputation
+    description: Query email address reputation and threat-intelligence signals.
+  - name: Reports
+    description: Report email addresses as malicious so the reputation graph picks up the signal.
+paths:
+  /{email}:
+    get:
+      operationId: queryEmailReputation
+      summary: EmailRep Query Email Reputation
+      description: >-
+        Look up reputation, suspiciousness, references, and detailed
+        intelligence signals for an email address. Returns a `reputation` of
+        `high`, `medium`, `low`, or `none`, a boolean `suspicious` flag, a
+        `references` count, and a `details` block covering blacklisting,
+        malicious activity, credential leaks, data breaches, domain
+        reputation, deliverability, MX validity, SPF/DMARC posture,
+        spoofability, free-provider/disposable classification, and online
+        profile observations. Use `summary=true` to additionally receive a
+        human-readable `summary` field.
+      tags:
+        - Reputation
+      parameters:
+        - name: email
+          in: path
+          required: true
+          description: The email address to query.
+          schema:
+            type: string
+            format: email
+          example: bill@microsoft.com
+        - name: summary
+          in: query
+          required: false
+          description: When `true`, include a human-readable `summary` field in the response.
+          schema:
+            type: boolean
+            default: false
+          example: true
+      responses:
+        '200':
+          description: Reputation lookup succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailReputation'
+              examples:
+                QueryEmailReputation200Example:
+                  summary: Default queryEmailReputation 200 response
+                  x-microcks-default: true
+                  value:
+                    email: bill@microsoft.com
+                    reputation: high
+                    suspicious: false
+                    references: 79
+                    details:
+                      blacklisted: false
+                      malicious_activity: false
+                      malicious_activity_recent: false
+                      credentials_leaked: true
+                      credentials_leaked_recent: false
+                      data_breach: true
+                      first_seen: 07/01/2008
+                      last_seen: 05/24/2019
+                      domain_exists: true
+                      domain_reputation: high
+                      new_domain: false
+                      days_since_domain_creation: 10341
+                      suspicious_tld: false
+                      spam: false
+                      free_provider: false
+                      disposable: false
+                      deliverable: true
+                      accept_all: true
+                      valid_mx: true
+                      spoofable: false
+                      spf_strict: true
+                      dmarc_enforced: true
+                      profiles:
+                        - myspace
+                        - spotify
+                        - twitter
+                        - pinterest
+                        - flickr
+                        - linkedin
+                        - vimeo
+                        - angellist
+        '400':
+          description: Bad request — invalid email address.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized — missing or invalid API key.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Rate limit exceeded for the caller's plan.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+  /report:
+    post:
+      operationId: reportEmail
+      summary: EmailRep Report Email
+      description: >-
+        Report an email address as exhibiting malicious behavior so the
+        EmailRep reputation graph picks up the signal. Requires an API key.
+        Submit one or more `tags` (such as `bec`, `maldoc`, `phishing`,
+        `account_takeover`, `spam`), an optional human-readable
+        `description`, the `timestamp` when the activity was observed (Unix
+        epoch seconds, defaults to now), and an optional `expires` window in
+        hours during which the address should be treated as risky.
+      tags:
+        - Reports
+      requestBody:
+        required: true
+        description: Report payload.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportRequest'
+            examples:
+              ReportEmailRequestExample:
+                summary: Default reportEmail request
+                x-microcks-default: true
+                value:
+                  email: attacker@example.com
+                  tags:
+                    - bec
+                    - maldoc
+                  description: Phishing email impersonating the CEO with a malicious attachment.
+                  timestamp: 1748563200
+                  expires: 168
+      responses:
+        '200':
+          description: Report accepted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportResponse'
+              examples:
+                ReportEmail200Example:
+                  summary: Default reportEmail 200 response
+                  x-microcks-default: true
+                  value:
+                    status: success
+        '400':
+          description: Bad request — missing or invalid fields.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized — API key required to submit reports.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Rate limit exceeded for the caller's plan.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Key
+      description: >-
+        EmailRep API key issued at https://emailrep.io/key. Free tier is
+        available; the Commercial and Enterprise tiers raise the per-month
+        and per-day quotas. The key is passed in the `Key` HTTP header on
+        every request.
+  schemas:
+    EmailReputation:
+      type: object
+      title: EmailReputation
+      description: >-
+        Reputation verdict, suspicious flag, references count, and detailed
+        intelligence signal block returned for an email-address query.
+      required:
+        - email
+        - reputation
+        - suspicious
+        - references
+        - details
+      properties:
+        email:
+          type: string
+          format: email
+          description: The queried email address, echoed back.
+          example: bill@microsoft.com
+        reputation:
+          type: string
+          description: Overall reputation verdict for the address.
+          enum:
+            - high
+            - medium
+            - low
+            - none
+          example: high
+        suspicious:
+          type: boolean
+          description: Whether the email should be treated as suspicious or risky.
+          example: false
+        references:
+          type: integer
+          description: >-
+            Total number of positive and negative reputation sources observed
+            for the address or its associated domain. Not all references are
+            direct mentions of the address.
+          example: 79
+        summary:
+          type: string
+          description: >-
+            Human-readable summary of the reputation verdict. Returned only
+            when the caller passes `summary=true`.
+          example: "high reputation, seen on 8 profiles, found in 1 data breach"
+        details:
+          $ref: '#/components/schemas/EmailReputationDetails'
+    EmailReputationDetails:
+      type: object
+      title: EmailReputationDetails
+      description: Detailed intelligence signals about the email address and its domain.
+      properties:
+        blacklisted:
+          type: boolean
+          description: The email is believed to be malicious or spammy.
+          example: false
+        malicious_activity:
+          type: boolean
+          description: The email has exhibited malicious behavior (e.g. phishing or fraud).
+          example: false
+        malicious_activity_recent:
+          type: boolean
+          description: Malicious behavior observed within the last 90 days.
+          example: false
+        credentials_leaked:
+          type: boolean
+          description: Credentials for the email were leaked at some point (data breach, paste, dark web, etc.).
+          example: true
+        credentials_leaked_recent:
+          type: boolean
+          description: Credentials were leaked within the last 90 days.
+          example: false
+        data_breach:
+          type: boolean
+          description: The email appeared in a known data breach.
+          example: true
+        first_seen:
+          type: string
+          description: First date the email was observed in a breach, credential leak, or exhibiting malicious or spammy behavior. `never` if never seen.
+          example: 07/01/2008
+        last_seen:
+          type: string
+          description: Last date the email was observed in a breach, credential leak, or exhibiting malicious or spammy behavior. `never` if never seen.
+          example: 05/24/2019
+        domain_exists:
+          type: boolean
+          description: Whether the email's domain is a valid, resolvable domain.
+          example: true
+        domain_reputation:
+          type: string
+          description: Reputation verdict for the email's domain. `n/a` when the domain is a free provider, disposable, or does not exist.
+          enum:
+            - high
+            - medium
+            - low
+            - n/a
+          example: high
+        new_domain:
+          type: boolean
+          description: The domain was registered within the last year.
+          example: false
+        days_since_domain_creation:
+          type: integer
+          description: Days since the domain was created.
+          example: 10341
+        suspicious_tld:
+          type: boolean
+          description: The domain uses a top-level domain associated with abuse.
+          example: false
+        spam:
+          type: boolean
+          description: The email has exhibited spammy behavior (e.g. spam traps, login form abuse).
+          example: false
+        free_provider:
+          type: boolean
+          description: The email uses a free email provider (e.g. Gmail, Yahoo, Outlook).
+          example: false
+        disposable:
+          type: boolean
+          description: The email uses a temporary or disposable provider.
+          example: false
+        deliverable:
+          type: boolean
+          description: The address is deliverable based on SMTP probes and MX checks.
+          example: true
+        accept_all:
+          type: boolean
+          description: The mail server has a default accept-all policy.
+          example: true
+        valid_mx:
+          type: boolean
+          description: The domain has a valid MX record.
+          example: true
+        spoofable:
+          type: boolean
+          description: The email address can be spoofed (e.g. SPF is not strict or DMARC is not enforced).
+          example: false
+        spf_strict:
+          type: boolean
+          description: SPF record is sufficiently strict to prevent spoofing.
+          example: true
+        dmarc_enforced:
+          type: boolean
+          description: DMARC is configured correctly and enforced.
+          example: true
+        profiles:
+          type: array
+          description: Online profiles where the email has been observed.
+          items:
+            type: string
+          example:
+            - myspace
+            - spotify
+            - twitter
+            - pinterest
+            - flickr
+            - linkedin
+            - vimeo
+            - angellist
+    ReportRequest:
+      type: object
+      title: ReportRequest
+      description: Payload for reporting an email address as exhibiting malicious behavior.
+      required:
+        - email
+        - tags
+      properties:
+        email:
+          type: string
+          format: email
+          description: The email address being reported.
+          example: attacker@example.com
+        tags:
+          type: array
+          description: One or more tags classifying the malicious behavior.
+          items:
+            type: string
+          example:
+            - bec
+            - maldoc
+        description:
+          type: string
+          description: Additional information and context about the activity.
+          example: Phishing email impersonating the CEO with a malicious attachment.
+        timestamp:
+          type: integer
+          format: int64
+          description: Unix epoch seconds when the activity occurred. Defaults to now.
+          example: 1748563200
+        expires:
+          type: integer
+          description: Number of hours the reported email should be considered risky.
+          example: 168
+    ReportResponse:
+      type: object
+      title: ReportResponse
+      description: Outcome of a report submission.
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          description: Outcome of the report submission.
+          enum:
+            - success
+            - fail
+          example: success
+        reason:
+          type: string
+          description: Human-readable failure reason. Present when `status` is `fail`.
+          example: invalid email address
+    Error:
+      type: object
+      title: Error
+      description: Error envelope returned for failed requests.
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          description: Outcome of the request.
+          enum:
+            - fail
+          example: fail
+        reason:
+          type: string
+          description: Human-readable failure reason.
+          example: invalid email address
