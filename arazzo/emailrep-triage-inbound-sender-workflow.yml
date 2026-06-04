@@ -1,0 +1,105 @@
+arazzo: 1.0.1
+info:
+  title: EmailRep Triage Inbound Sender
+  summary: Pull a human-readable reputation summary for an inbound sender and escalate low-reputation, spoofable senders by reporting them.
+  description: >-
+    A sender-triage pattern for inbound mail security. The workflow requests a
+    reputation lookup with the summary flag enabled so an analyst gets a
+    human-readable verdict, then branches on the overall reputation grade and
+    the spoofability of the address: a low or no-reputation sender is escalated
+    into a report so the wider reputation graph is alerted, while a high or
+    medium reputation sender ends without escalation. Every step spells out its
+    request inline — including the Key authorization header — so the flow can be
+    read and executed without opening the underlying OpenAPI description.
+  version: 1.0.0
+sourceDescriptions:
+- name: emailrepApi
+  url: ../openapi/emailrep-api-openapi.yml
+  type: openapi
+workflows:
+- workflowId: triage-inbound-sender
+  summary: Summarize an inbound sender's reputation and escalate low-reputation senders.
+  description: >-
+    Queries an inbound sender with summary enabled, captures the human-readable
+    verdict and spoofability, and branches on reputation: low or none triggers
+    an escalation report, while high or medium ends the workflow cleanly.
+  inputs:
+    type: object
+    required:
+    - apiKey
+    - email
+    properties:
+      apiKey:
+        type: string
+        description: EmailRep API key passed in the Key header on every request.
+      email:
+        type: string
+        description: The inbound sender address to triage.
+      tags:
+        type: array
+        description: Tags recorded on the escalation report for a low-reputation sender.
+        items:
+          type: string
+      description:
+        type: string
+        description: Optional human-readable context recorded with the escalation report.
+  steps:
+  - stepId: summarizeSender
+    description: >-
+      Query the sender with the summary flag enabled to capture a
+      human-readable verdict alongside the reputation grade and spoofability.
+    operationId: queryEmailReputation
+    parameters:
+    - name: Key
+      in: header
+      value: $inputs.apiKey
+    - name: email
+      in: path
+      value: $inputs.email
+    - name: summary
+      in: query
+      value: true
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      reputation: $response.body#/reputation
+      summary: $response.body#/summary
+      spoofable: $response.body#/details/spoofable
+      references: $response.body#/references
+    onSuccess:
+    - name: lowReputationSender
+      type: goto
+      stepId: escalateSender
+      criteria:
+      - context: $response.body
+        condition: $.reputation == 'low' || $.reputation == 'none'
+        type: jsonpath
+    - name: trustedSender
+      type: end
+      criteria:
+      - context: $response.body
+        condition: $.reputation == 'high' || $.reputation == 'medium'
+        type: jsonpath
+  - stepId: escalateSender
+    description: >-
+      Escalate a low or no-reputation sender by reporting it so the wider
+      EmailRep reputation graph is alerted to the risky address.
+    operationId: reportEmail
+    parameters:
+    - name: Key
+      in: header
+      value: $inputs.apiKey
+    requestBody:
+      contentType: application/json
+      payload:
+        email: $inputs.email
+        tags: $inputs.tags
+        description: $inputs.description
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      reportStatus: $response.body#/status
+  outputs:
+    reputation: $steps.summarizeSender.outputs.reputation
+    summary: $steps.summarizeSender.outputs.summary
+    reportStatus: $steps.escalateSender.outputs.reportStatus

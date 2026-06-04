@@ -1,0 +1,110 @@
+arazzo: 1.0.1
+info:
+  title: EmailRep Verify Before Report
+  summary: Confirm an email's domain resolves and is deliverable before reporting it, so junk addresses never pollute the reputation graph.
+  description: >-
+    A quality gate in front of the report endpoint. Before an analyst-supplied
+    address is reported as malicious, the workflow queries EmailRep to confirm
+    the domain actually exists and the address is deliverable. When the address
+    is real it proceeds to file the report; when the domain does not resolve it
+    ends without reporting so non-existent or mistyped addresses never enter the
+    reputation graph. Every step spells out its request inline — including the
+    Key authorization header — so the flow can be read and executed without
+    opening the underlying OpenAPI description.
+  version: 1.0.0
+sourceDescriptions:
+- name: emailrepApi
+  url: ../openapi/emailrep-api-openapi.yml
+  type: openapi
+workflows:
+- workflowId: verify-before-report
+  summary: Verify the address resolves, then branch into reporting it or ending cleanly.
+  description: >-
+    Queries the address to confirm its domain exists, and only submits the
+    malicious-behavior report when the domain resolves. Addresses whose domain
+    does not exist are skipped so they never pollute the reputation graph.
+  inputs:
+    type: object
+    required:
+    - apiKey
+    - email
+    - tags
+    properties:
+      apiKey:
+        type: string
+        description: EmailRep API key passed in the Key header on every request.
+      email:
+        type: string
+        description: The email address to verify and conditionally report.
+      tags:
+        type: array
+        description: Tags classifying the malicious behavior recorded with the report.
+        items:
+          type: string
+      description:
+        type: string
+        description: Optional human-readable context recorded with the report.
+      timestamp:
+        type: integer
+        description: Unix epoch seconds when the malicious activity was observed.
+      expires:
+        type: integer
+        description: Number of hours the reported address should be treated as risky.
+  steps:
+  - stepId: verifyAddress
+    description: >-
+      Query the address to confirm its domain exists and capture the
+      deliverability signals before deciding whether to report it.
+    operationId: queryEmailReputation
+    parameters:
+    - name: Key
+      in: header
+      value: $inputs.apiKey
+    - name: email
+      in: path
+      value: $inputs.email
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      domainExists: $response.body#/details/domain_exists
+      deliverable: $response.body#/details/deliverable
+      validMx: $response.body#/details/valid_mx
+    onSuccess:
+    - name: domainResolves
+      type: goto
+      stepId: fileReport
+      criteria:
+      - context: $response.body
+        condition: $.details.domain_exists == true
+        type: jsonpath
+    - name: domainMissing
+      type: end
+      criteria:
+      - context: $response.body
+        condition: $.details.domain_exists == false
+        type: jsonpath
+  - stepId: fileReport
+    description: >-
+      File the malicious-behavior report for the verified address, recording
+      the supplied tags, description, observation timestamp, and risk window.
+    operationId: reportEmail
+    parameters:
+    - name: Key
+      in: header
+      value: $inputs.apiKey
+    requestBody:
+      contentType: application/json
+      payload:
+        email: $inputs.email
+        tags: $inputs.tags
+        description: $inputs.description
+        timestamp: $inputs.timestamp
+        expires: $inputs.expires
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      reportStatus: $response.body#/status
+  outputs:
+    domainExists: $steps.verifyAddress.outputs.domainExists
+    deliverable: $steps.verifyAddress.outputs.deliverable
+    reportStatus: $steps.fileReport.outputs.reportStatus

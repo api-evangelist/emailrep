@@ -96,6 +96,18 @@ apis:
       - type: NaftikoCapability
         url: capabilities/emailrep-api-reports.yaml
 common:
+  - type: ArazzoWorkflows
+    url: arazzo/
+    workflows:
+    - url: arazzo/emailrep-screen-and-report-malicious-workflow.yml
+      name: EmailRep Screen and Report Malicious Sender
+      summary: Query an email's reputation and, when the signals show it is malicious, report it back into the reputation graph.
+    - url: arazzo/emailrep-triage-inbound-sender-workflow.yml
+      name: EmailRep Triage Inbound Sender
+      summary: Pull a human-readable reputation summary for an inbound sender and escalate low-reputation, spoofable senders by reporting them.
+    - url: arazzo/emailrep-verify-before-report-workflow.yml
+      name: EmailRep Verify Before Report
+      summary: Confirm an email's domain resolves and is deliverable before reporting it, so junk addresses never pollute the reputation graph.
   - type: Website
     url: https://emailrep.io
   - type: Documentation
