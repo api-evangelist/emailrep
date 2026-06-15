@@ -1,0 +1,74 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "EmailRep API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "Key",
+      "value": "{{Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Reputation",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "EmailRep Query Email Reputation",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://emailrep.io/:email",
+            "params": [
+              {
+                "name": "email",
+                "value": "bill@microsoft.com",
+                "type": "path",
+                "description": "The email address to query."
+              },
+              {
+                "name": "summary",
+                "value": "true",
+                "type": "query",
+                "description": "When `true`, include a human-readable `summary` field in the response."
+              }
+            ]
+          },
+          "docs": "Look up reputation, suspiciousness, references, and detailed intelligence signals for an email address. Returns a `reputation` of `high`, `medium`, `low`, or `none`, a boolean `suspicious` flag, a `references` count, and a `details` block covering blacklisting, malicious activity, credential leaks, data breaches, domain reputation, deliverability, MX validity, SPF/DMARC posture, spoofability, free-provider/disposable classification, and online profile observations. Use `summary=true` to addition"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Reports",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "EmailRep Report Email",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://emailrep.io/report",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Report an email address as exhibiting malicious behavior so the EmailRep reputation graph picks up the signal. Requires an API key. Submit one or more `tags` (such as `bec`, `maldoc`, `phishing`, `account_takeover`, `spam`), an optional human-readable `description`, the `timestamp` when the activity was observed (Unix epoch seconds, defaults to now), and an optional `expires` window in hours during which the address should be treated as risky."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

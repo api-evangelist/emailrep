@@ -1,0 +1,642 @@
+{
+  "item": [
+    {
+      "id": "f6369832-10cc-49b3-92db-fd8ddb6a6d7b",
+      "name": "Reputation",
+      "description": {
+        "content": "Query email address reputation and threat-intelligence signals.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "da0c871e-373d-4de0-9569-4d022a37a4ad",
+          "name": "EmailRep Query Email Reputation",
+          "request": {
+            "name": "EmailRep Query Email Reputation",
+            "description": {
+              "content": "Look up reputation, suspiciousness, references, and detailed intelligence signals for an email address. Returns a `reputation` of `high`, `medium`, `low`, or `none`, a boolean `suspicious` flag, a `references` count, and a `details` block covering blacklisting, malicious activity, credential leaks, data breaches, domain reputation, deliverability, MX validity, SPF/DMARC posture, spoofability, free-provider/disposable classification, and online profile observations. Use `summary=true` to additionally receive a human-readable `summary` field.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                ":email"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "summary",
+                  "value": "false",
+                  "description": "When `true`, include a human-readable `summary` field in the response."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<email>",
+                  "key": "email",
+                  "description": "(Required) The email address to query."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "2b389fd8-5c28-4d1f-9041-be089482072d",
+              "name": "Reputation lookup succeeded.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    ":email"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "summary",
+                      "value": "true"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<email>",
+                      "key": "email",
+                      "description": "(Required) The email address to query."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"email\": \"bill@microsoft.com\",\n  \"reputation\": \"high\",\n  \"suspicious\": false,\n  \"references\": 79,\n  \"details\": {\n    \"blacklisted\": false,\n    \"malicious_activity\": false,\n    \"malicious_activity_recent\": false,\n    \"credentials_leaked\": true,\n    \"credentials_leaked_recent\": false,\n    \"data_breach\": true,\n    \"first_seen\": \"07/01/2008\",\n    \"last_seen\": \"05/24/2019\",\n    \"domain_exists\": true,\n    \"domain_reputation\": \"high\",\n    \"new_domain\": false,\n    \"days_since_domain_creation\": 10341,\n    \"suspicious_tld\": false,\n    \"spam\": false,\n    \"free_provider\": false,\n    \"disposable\": false,\n    \"deliverable\": true,\n    \"accept_all\": true,\n    \"valid_mx\": true,\n    \"spoofable\": false,\n    \"spf_strict\": true,\n    \"dmarc_enforced\": true,\n    \"profiles\": [\n      \"myspace\",\n      \"spotify\",\n      \"twitter\",\n      \"pinterest\",\n      \"flickr\",\n      \"linkedin\",\n      \"vimeo\",\n      \"angellist\"\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "737de342-1e1a-42c5-8985-a948307aae7a",
+              "name": "Bad request — invalid email address.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    ":email"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "summary",
+                      "value": "true"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<email>",
+                      "key": "email",
+                      "description": "(Required) The email address to query."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"fail\",\n  \"reason\": \"invalid email address\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d05aa422-957e-46fc-95cd-21d6f58a6b1c",
+              "name": "Unauthorized — missing or invalid API key.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    ":email"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "summary",
+                      "value": "true"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<email>",
+                      "key": "email",
+                      "description": "(Required) The email address to query."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"fail\",\n  \"reason\": \"invalid email address\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "726488fc-ca69-419a-8a7f-43458c6bc435",
+              "name": "Rate limit exceeded for the caller's plan.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    ":email"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "summary",
+                      "value": "true"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<email>",
+                      "key": "email",
+                      "description": "(Required) The email address to query."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"fail\",\n  \"reason\": \"invalid email address\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "dd87d387-4672-49c6-8638-5022e462d8be",
+              "name": "Internal server error.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    ":email"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "summary",
+                      "value": "true"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<email>",
+                      "key": "email",
+                      "description": "(Required) The email address to query."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"fail\",\n  \"reason\": \"invalid email address\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "f3463e37-1703-4468-aeb1-72b2f61b49d7",
+      "name": "Reports",
+      "description": {
+        "content": "Report email addresses as malicious so the reputation graph picks up the signal.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "5f0bce22-d158-47c1-8393-f2c57ee9a09d",
+          "name": "EmailRep Report Email",
+          "request": {
+            "name": "EmailRep Report Email",
+            "description": {
+              "content": "Report an email address as exhibiting malicious behavior so the EmailRep reputation graph picks up the signal. Requires an API key. Submit one or more `tags` (such as `bec`, `maldoc`, `phishing`, `account_takeover`, `spam`), an optional human-readable `description`, the `timestamp` when the activity was observed (Unix epoch seconds, defaults to now), and an optional `expires` window in hours during which the address should be treated as risky.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "report"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"<email>\",\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"description\": \"<string>\",\n  \"timestamp\": \"<long>\",\n  \"expires\": \"<integer>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "12be147e-e2f4-46e1-ac94-53d0323ff810",
+              "name": "Report accepted.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "report"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"attacker@example.com\",\n  \"tags\": [\n    \"bec\",\n    \"maldoc\"\n  ],\n  \"description\": \"Phishing email impersonating the CEO with a malicious attachment.\",\n  \"timestamp\": 1748563200,\n  \"expires\": 168\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"success\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "329ecb06-84db-4ce5-8c3f-68f43b38fcb3",
+              "name": "Bad request — missing or invalid fields.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "report"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"attacker@example.com\",\n  \"tags\": [\n    \"bec\",\n    \"maldoc\"\n  ],\n  \"description\": \"Phishing email impersonating the CEO with a malicious attachment.\",\n  \"timestamp\": 1748563200,\n  \"expires\": 168\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"fail\",\n  \"reason\": \"invalid email address\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ac1f3f2a-61f1-4810-8f11-b21bf2db8c46",
+              "name": "Unauthorized — API key required to submit reports.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "report"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"attacker@example.com\",\n  \"tags\": [\n    \"bec\",\n    \"maldoc\"\n  ],\n  \"description\": \"Phishing email impersonating the CEO with a malicious attachment.\",\n  \"timestamp\": 1748563200,\n  \"expires\": 168\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"fail\",\n  \"reason\": \"invalid email address\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "17ff146d-3629-4d70-b970-484010e17ca2",
+              "name": "Rate limit exceeded for the caller's plan.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "report"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"attacker@example.com\",\n  \"tags\": [\n    \"bec\",\n    \"maldoc\"\n  ],\n  \"description\": \"Phishing email impersonating the CEO with a malicious attachment.\",\n  \"timestamp\": 1748563200,\n  \"expires\": 168\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"fail\",\n  \"reason\": \"invalid email address\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://emailrep.io",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "Key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "8cc2df5d-4e86-4fc7-98d2-0a05f7070947",
+    "name": "EmailRep API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "EmailRep is an email-address reputation and threat-intelligence API operated by Sublime Security, Inc. It crawls and enriches data across social media profiles, professional networking sites, dark-web credential leaks, data breaches, phishing kits, phishing emails, spam lists, open mail relays, spam traps, domain age and reputation, and deliverability signals to predict the risk associated with any email address. Callers issue a `GET /{email}` lookup to receive a reputation verdict, a `suspicious` flag, a `references` count, and a detailed signal block, or `POST /report` to submit observations of malicious email behavior back into the reputation graph.\n\nContact Support:\n Name: Sublime Security\n Email: support@sublimesecurity.com",
+      "type": "text/plain"
+    }
+  }
+}
