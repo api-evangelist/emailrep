@@ -59,25 +59,25 @@ apis:
         url: https://docs.sublimesecurity.com/reference/emailrep-quickstart
       - type: OpenAPI
         url: openapi/emailrep-api-openapi.yml
-      - type: SDK
+      - type: SDKs
         title: Python SDK
         url: https://github.com/sublime-security/emailrep.io-python
-      - type: SDK
+      - type: SDKs
         title: Python Package
         url: https://pypi.org/project/emailrep/
-      - type: SDK
+      - type: SDKs
         title: PowerShell SDK (community)
         url: https://github.com/arnydo/PSEmailRep
-      - type: SDK
+      - type: SDKs
         title: R SDK (community)
         url: https://git.rud.is/hrbrmstr/emailrep
-      - type: SDK
+      - type: SDKs
         title: .NET SDK (community)
         url: https://github.com/WestDiscGolf/EmailRep.NET
-      - type: SDK
+      - type: SDKs
         title: Go SDK (community)
         url: https://github.com/kaiiyer/emailrep
-      - type: SDK
+      - type: SDKs
         title: Go SDK (community, vertoforce)
         url: https://github.com/vertoforce/go-emailrep
       - type: CLI
@@ -87,24 +87,15 @@ apis:
 common:
   - type: PostmanWorkspace
     url: https://www.postman.com/kinlaneapi/emailrep/overview
-  - type: ArazzoWorkflows
-    url: arazzo/
-    workflows:
-      - url: arazzo/emailrep-screen-and-report-malicious-workflow.yml
-        name: EmailRep Screen and Report Malicious Sender
-        summary: >-
-          Query an email's reputation and, when the signals show it is malicious, report it back into the reputation
-          graph.
-      - url: arazzo/emailrep-triage-inbound-sender-workflow.yml
-        name: EmailRep Triage Inbound Sender
-        summary: >-
-          Pull a human-readable reputation summary for an inbound sender and escalate low-reputation, spoofable senders
-          by reporting them.
-      - url: arazzo/emailrep-verify-before-report-workflow.yml
-        name: EmailRep Verify Before Report
-        summary: >-
-          Confirm an email's domain resolves and is deliverable before reporting it, so junk addresses never pollute the
-          reputation graph.
+  - type: Arazzo
+    url: arazzo/emailrep-screen-and-report-malicious-workflow.yml
+    name: EmailRep Screen and Report Malicious Sender
+  - type: Arazzo
+    url: arazzo/emailrep-triage-inbound-sender-workflow.yml
+    name: EmailRep Triage Inbound Sender
+  - type: Arazzo
+    url: arazzo/emailrep-verify-before-report-workflow.yml
+    name: EmailRep Verify Before Report
   - type: Website
     url: https://emailrep.io
   - type: Documentation
@@ -113,7 +104,7 @@ common:
     url: https://docs.sublimesecurity.com/reference/emailrep-introduction
   - type: GettingStarted
     url: https://docs.sublimesecurity.com/reference/emailrep-quickstart
-  - type: SignUp
+  - type: Signup
     url: https://emailrep.io/key
   - type: Pricing
     url: https://emailrep.io/key
