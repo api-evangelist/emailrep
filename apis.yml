@@ -85,6 +85,10 @@ apis:
       - type: SourceCode
         url: https://github.com/sublime-security/emailrep.io
 common:
+  - type: DomainSecurity
+    url: security/emailrep-domain-security.yml
+  - type: Authentication
+    url: authentication/emailrep-authentication.yml
   - type: PostmanWorkspace
     url: https://www.postman.com/kinlaneapi/emailrep/overview
   - type: Arazzo

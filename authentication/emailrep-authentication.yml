@@ -1,0 +1,18 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/emailrep-api-openapi.yml
+summary:
+  types:
+  - apiKey
+  api_key_in:
+  - header
+schemes:
+- name: ApiKeyAuth
+  type: apiKey
+  in: header
+  parameter: Key
+  description: EmailRep API key issued at https://emailrep.io/key. Free tier is available; the
+    Commercial and Enterprise tiers raise the per-month and per-day quotas. The key is passed
+    in the `Key` HTTP header on every request.
+  sources:
+  - openapi/emailrep-api-openapi.yml
