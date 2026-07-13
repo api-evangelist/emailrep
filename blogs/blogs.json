@@ -2,11 +2,10 @@
   "repo": "emailrep",
   "feeds": [
     {
-      "source": "https://emailrep.io/blog",
-      "saved": 0,
-      "error": "HTTP 400 Bad Request on blog listing"
+      "source": "https://emailrep.io/privacy",
+      "error": "HTTPError"
     }
   ],
-  "fetched": "2026-06-27T12:38:55Z",
+  "fetched": "2026-07-11T11:50:51Z",
   "post_count": 0
 }
