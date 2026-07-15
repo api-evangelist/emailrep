@@ -85,6 +85,8 @@ apis:
       - type: SourceCode
         url: https://github.com/sublime-security/emailrep.io
 common:
+  - type: AgenticAccess
+    url: agentic-access/emailrep-agentic-access.yml
   - type: DomainSecurity
     url: security/emailrep-domain-security.yml
   - type: Authentication
