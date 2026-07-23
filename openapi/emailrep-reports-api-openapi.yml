@@ -1,0 +1,161 @@
+openapi: 3.0.3
+info:
+  title: EmailRep Reports API
+  version: '1.0'
+  description: EmailRep is an email-address reputation and threat-intelligence API operated by Sublime Security, Inc. It crawls and enriches data across social media profiles, professional networking sites, dark-web credential leaks, data breaches, phishing kits, phishing emails, spam lists, open mail relays, spam traps, domain age and reputation, and deliverability signals to predict the risk associated with any email address. Callers issue a `GET /{email}` lookup to receive a reputation verdict, a `suspicious` flag, a `references` count, and a detailed signal block, or `POST /report` to submit observations of malicious email behavior back into the reputation graph.
+  contact:
+    name: Sublime Security
+    url: https://sublimesecurity.com
+    email: support@sublimesecurity.com
+  license:
+    name: EmailRep Terms of Use
+    url: https://emailrep.io/terms
+  x-generated-from: documentation
+  x-last-validated: '2026-05-30'
+servers:
+- url: https://emailrep.io
+  description: EmailRep production API
+security:
+- ApiKeyAuth: []
+- {}
+tags:
+- name: Reports
+  description: Report email addresses as malicious so the reputation graph picks up the signal.
+paths:
+  /report:
+    post:
+      operationId: reportEmail
+      summary: EmailRep Report Email
+      description: Report an email address as exhibiting malicious behavior so the EmailRep reputation graph picks up the signal. Requires an API key. Submit one or more `tags` (such as `bec`, `maldoc`, `phishing`, `account_takeover`, `spam`), an optional human-readable `description`, the `timestamp` when the activity was observed (Unix epoch seconds, defaults to now), and an optional `expires` window in hours during which the address should be treated as risky.
+      tags:
+      - Reports
+      requestBody:
+        required: true
+        description: Report payload.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportRequest'
+            examples:
+              ReportEmailRequestExample:
+                summary: Default reportEmail request
+                x-microcks-default: true
+                value:
+                  email: attacker@example.com
+                  tags:
+                  - bec
+                  - maldoc
+                  description: Phishing email impersonating the CEO with a malicious attachment.
+                  timestamp: 1748563200
+                  expires: 168
+      responses:
+        '200':
+          description: Report accepted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportResponse'
+              examples:
+                ReportEmail200Example:
+                  summary: Default reportEmail 200 response
+                  x-microcks-default: true
+                  value:
+                    status: success
+        '400':
+          description: Bad request — missing or invalid fields.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized — API key required to submit reports.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Rate limit exceeded for the caller's plan.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+components:
+  schemas:
+    Error:
+      type: object
+      title: Error
+      description: Error envelope returned for failed requests.
+      required:
+      - status
+      properties:
+        status:
+          type: string
+          description: Outcome of the request.
+          enum:
+          - fail
+          example: fail
+        reason:
+          type: string
+          description: Human-readable failure reason.
+          example: invalid email address
+    ReportResponse:
+      type: object
+      title: ReportResponse
+      description: Outcome of a report submission.
+      required:
+      - status
+      properties:
+        status:
+          type: string
+          description: Outcome of the report submission.
+          enum:
+          - success
+          - fail
+          example: success
+        reason:
+          type: string
+          description: Human-readable failure reason. Present when `status` is `fail`.
+          example: invalid email address
+    ReportRequest:
+      type: object
+      title: ReportRequest
+      description: Payload for reporting an email address as exhibiting malicious behavior.
+      required:
+      - email
+      - tags
+      properties:
+        email:
+          type: string
+          format: email
+          description: The email address being reported.
+          example: attacker@example.com
+        tags:
+          type: array
+          description: One or more tags classifying the malicious behavior.
+          items:
+            type: string
+          example:
+          - bec
+          - maldoc
+        description:
+          type: string
+          description: Additional information and context about the activity.
+          example: Phishing email impersonating the CEO with a malicious attachment.
+        timestamp:
+          type: integer
+          format: int64
+          description: Unix epoch seconds when the activity occurred. Defaults to now.
+          example: 1748563200
+        expires:
+          type: integer
+          description: Number of hours the reported email should be considered risky.
+          example: 168
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Key
+      description: EmailRep API key issued at https://emailrep.io/key. Free tier is available; the Commercial and Enterprise tiers raise the per-month and per-day quotas. The key is passed in the `Key` HTTP header on every request.
