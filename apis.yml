@@ -10,7 +10,20 @@ description: >-
   POST `/report` endpoint lets analysts contribute observations of malicious email behavior back into the reputation
   graph.
 type: Index
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+accessModel:
+  pricing: freemium
+  onboarding: self-serve
+  trial: false
+  try_now: true
+  public: false
+  label: Freemium · Self-serve signup
+  confidence: high
+  source:
+  - plans
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/emailrep.png
 tags:
   - Security
   - Email
@@ -31,59 +44,74 @@ x-category: Security
 x-tier: 2
 x-tier-reason: enriched-from-stub
 apis:
-  - aid: emailrep:emailrep-api
-    name: EmailRep API
-    description: >-
-      Email reputation and threat-intelligence REST API. `GET /{email}` returns a reputation verdict
-      (high/medium/low/none), a `suspicious` flag, a `references` count, and a detailed signal block covering
-      blacklisting, malicious activity, credential leaks, data breaches, domain age and reputation, deliverability, MX
-      validity, SPF/DMARC posture, spoofability, free-provider/disposable status, and known online profiles. `POST
-      /report` lets authenticated callers report an email address as malicious (BEC, phishing, fraud, account takeover,
-      maldoc, etc.) so the signal feeds the reputation graph. Authentication is via a `Key` header issued from
-      emailrep.io/key. Free tier: 250 queries/month, 10/day; Commercial tier: 1,000 queries/month at $20/month with no
-      daily limit; Enterprise: high-volume custom plans with SLA.
-    humanURL: https://emailrep.io
-    baseURL: https://emailrep.io
-    tags:
-      - Email Reputation
-      - Threat Intelligence
-      - Phishing
-      - Fraud
-      - Deliverability
-    properties:
-      - type: Documentation
-        url: https://docs.sublimesecurity.com/reference/emailrep-introduction
-      - type: APIReference
-        url: https://docs.sublimesecurity.com/reference/emailrep-introduction
-      - type: GettingStarted
-        url: https://docs.sublimesecurity.com/reference/emailrep-quickstart
-      - type: OpenAPI
-        url: openapi/emailrep-api-openapi.yml
-      - type: SDKs
-        title: Python SDK
-        url: https://github.com/sublime-security/emailrep.io-python
-      - type: SDKs
-        title: Python Package
-        url: https://pypi.org/project/emailrep/
-      - type: SDKs
-        title: PowerShell SDK (community)
-        url: https://github.com/arnydo/PSEmailRep
-      - type: SDKs
-        title: R SDK (community)
-        url: https://git.rud.is/hrbrmstr/emailrep
-      - type: SDKs
-        title: .NET SDK (community)
-        url: https://github.com/WestDiscGolf/EmailRep.NET
-      - type: SDKs
-        title: Go SDK (community)
-        url: https://github.com/kaiiyer/emailrep
-      - type: SDKs
-        title: Go SDK (community, vertoforce)
-        url: https://github.com/vertoforce/go-emailrep
-      - type: CLI
-        url: https://github.com/sublime-security/emailrep.io-python
-      - type: SourceCode
-        url: https://github.com/sublime-security/emailrep.io
+- aid: emailrep:emailrep-reports-api
+  name: EmailRep Reports API
+  description: Report email addresses as malicious so the reputation graph picks up the signal.
+  humanURL: https://emailrep.io
+  baseURL: https://emailrep.io
+  tags:
+  - Reports
+  properties:
+  - type: OpenAPI
+    url: openapi/emailrep-reports-api-openapi.yml
+  - type: Documentation
+    url: https://docs.sublimesecurity.com/reference/emailrep-introduction
+  - type: APIReference
+    url: https://docs.sublimesecurity.com/reference/emailrep-introduction
+  - type: GettingStarted
+    url: https://docs.sublimesecurity.com/reference/emailrep-quickstart
+  - type: SDKs
+    url: https://github.com/sublime-security/emailrep.io-python
+  - type: SDKs
+    url: https://pypi.org/project/emailrep/
+  - type: SDKs
+    url: https://github.com/arnydo/PSEmailRep
+  - type: SDKs
+    url: https://git.rud.is/hrbrmstr/emailrep
+  - type: SDKs
+    url: https://github.com/WestDiscGolf/EmailRep.NET
+  - type: SDKs
+    url: https://github.com/kaiiyer/emailrep
+  - type: SDKs
+    url: https://github.com/vertoforce/go-emailrep
+  - type: CLI
+    url: https://github.com/sublime-security/emailrep.io-python
+  - type: SourceCode
+    url: https://github.com/sublime-security/emailrep.io
+- aid: emailrep:emailrep-reputation-api
+  name: EmailRep Reputation API
+  description: Query email address reputation and threat-intelligence signals.
+  humanURL: https://emailrep.io
+  baseURL: https://emailrep.io
+  tags:
+  - Reputation
+  properties:
+  - type: OpenAPI
+    url: openapi/emailrep-reputation-api-openapi.yml
+  - type: Documentation
+    url: https://docs.sublimesecurity.com/reference/emailrep-introduction
+  - type: APIReference
+    url: https://docs.sublimesecurity.com/reference/emailrep-introduction
+  - type: GettingStarted
+    url: https://docs.sublimesecurity.com/reference/emailrep-quickstart
+  - type: SDKs
+    url: https://github.com/sublime-security/emailrep.io-python
+  - type: SDKs
+    url: https://pypi.org/project/emailrep/
+  - type: SDKs
+    url: https://github.com/arnydo/PSEmailRep
+  - type: SDKs
+    url: https://git.rud.is/hrbrmstr/emailrep
+  - type: SDKs
+    url: https://github.com/WestDiscGolf/EmailRep.NET
+  - type: SDKs
+    url: https://github.com/kaiiyer/emailrep
+  - type: SDKs
+    url: https://github.com/vertoforce/go-emailrep
+  - type: CLI
+    url: https://github.com/sublime-security/emailrep.io-python
+  - type: SourceCode
+    url: https://github.com/sublime-security/emailrep.io
 common:
   - type: AgenticAccess
     url: agentic-access/emailrep-agentic-access.yml
