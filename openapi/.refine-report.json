@@ -1,0 +1,16 @@
+{
+  "provider": "emailrep",
+  "sources": [
+    "emailrep-reports-api-openapi.yml",
+    "emailrep-reputation-api-openapi.yml"
+  ],
+  "outputs": [
+    "emailrep-reports-api-openapi.yml",
+    "emailrep-reputation-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
