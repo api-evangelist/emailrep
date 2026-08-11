@@ -113,6 +113,8 @@ apis:
   - type: SourceCode
     url: https://github.com/sublime-security/emailrep.io
 common:
+  - type: IssueTracker
+    url: https://github.com/sublime-security/emailrep.io/issues
   - type: AgenticAccess
     url: agentic-access/emailrep-agentic-access.yml
   - type: DomainSecurity
