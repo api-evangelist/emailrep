@@ -37,7 +37,7 @@ tags:
   - Public APIs
 url: https://raw.githubusercontent.com/api-evangelist/emailrep/refs/heads/main/apis.yml
 created: '2026-05-28'
-modified: '2026-05-30'
+modified: '2026-08-13'
 specificationVersion: '0.20'
 x-source: public-apis/public-apis
 x-category: Security
@@ -55,11 +55,11 @@ apis:
   - type: OpenAPI
     url: openapi/emailrep-reports-api-openapi.yml
   - type: Documentation
-    url: https://docs.sublimesecurity.com/reference/emailrep-introduction
+    url: https://docs.sublime.security/reference/emailrep-introduction
   - type: APIReference
-    url: https://docs.sublimesecurity.com/reference/emailrep-introduction
+    url: https://docs.sublime.security/reference/emailrep-introduction
   - type: GettingStarted
-    url: https://docs.sublimesecurity.com/reference/emailrep-quickstart
+    url: https://github.com/sublime-security/emailrep.io#simple-usage
   - type: SDKs
     url: https://github.com/sublime-security/emailrep.io-python
   - type: SDKs
@@ -89,11 +89,11 @@ apis:
   - type: OpenAPI
     url: openapi/emailrep-reputation-api-openapi.yml
   - type: Documentation
-    url: https://docs.sublimesecurity.com/reference/emailrep-introduction
+    url: https://docs.sublime.security/reference/emailrep-introduction
   - type: APIReference
-    url: https://docs.sublimesecurity.com/reference/emailrep-introduction
+    url: https://docs.sublime.security/reference/emailrep-introduction
   - type: GettingStarted
-    url: https://docs.sublimesecurity.com/reference/emailrep-quickstart
+    url: https://github.com/sublime-security/emailrep.io#simple-usage
   - type: SDKs
     url: https://github.com/sublime-security/emailrep.io-python
   - type: SDKs
@@ -135,23 +135,23 @@ common:
   - type: Website
     url: https://emailrep.io
   - type: Documentation
-    url: https://docs.sublimesecurity.com/reference/emailrep-introduction
+    url: https://docs.sublime.security/reference/emailrep-introduction
   - type: APIReference
-    url: https://docs.sublimesecurity.com/reference/emailrep-introduction
+    url: https://docs.sublime.security/reference/emailrep-introduction
   - type: GettingStarted
-    url: https://docs.sublimesecurity.com/reference/emailrep-quickstart
-  - type: Signup
+    url: https://github.com/sublime-security/emailrep.io#simple-usage
+  - type: SignUp
     url: https://emailrep.io/key
   - type: Pricing
     url: https://emailrep.io/key
   - type: TermsOfService
-    url: https://emailrep.io/terms
+    url: https://sublimesecurity.com/terms
   - type: PrivacyPolicy
-    url: https://emailrep.io/privacy
+    url: https://sublimesecurity.com/privacy
   - type: Blog
-    url: https://emailrep.io/blog
+    url: https://blog.sublimesecurity.com
   - type: Support
-    url: https://sublimesecurity.com/contact
+    url: https://emailrep.io/contact
   - type: GitHubOrganization
     url: https://github.com/sublime-security
   - type: SourceCode
@@ -222,6 +222,37 @@ common:
     url: examples/api-report-request-example.json
   - type: Examples
     url: examples/api-report-response-example.json
+  - type: Packages
+    url: packages/emailrep-packages.yml
+  - type: SDKs
+    url: packages/emailrep-packages.yml
+  - type: CLI
+    url: cli/emailrep-cli.yml
+  - type: MCPServer
+    url: mcp/emailrep-mcp.yml
+    name: Sublime Security documentation MCP server (exposes the EmailRep Alpha API spec)
+  - type: ToolCrosswalk
+    url: mcp/emailrep-tool-crosswalk.yml
+  - type: LLMsTxt
+    url: llms/emailrep-llms.txt
+  - type: Conventions
+    url: conventions/emailrep-conventions.yml
+  - type: ErrorCatalog
+    url: errors/emailrep-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/emailrep-lifecycle.yml
+  - type: Conformance
+    url: conformance/emailrep-conformance.yml
+  - type: DataModel
+    url: data-model/emailrep-data-model.yml
+  - type: TrustCenter
+    url: security/emailrep-trust-center.yml
+  - type: AgentSkill
+    url: skills/_index.yml
+  - type: Overlay
+    url: overlays/emailrep-reputation-api-overlay.yaml
+  - type: Overlay
+    url: overlays/emailrep-reports-api-overlay.yaml
 features:
   - name: Reputation Verdict
     description: >-
@@ -311,3 +342,9 @@ solutions:
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com
+
+x-enrichment:
+  date: '2026-08-13'
+  status: enriched
+  artifacts_added: 21
+  pass: local-v1
