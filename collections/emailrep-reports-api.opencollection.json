@@ -1,0 +1,41 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "EmailRep Reports API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "Key",
+      "value": "{{Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Reports",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "EmailRep Report Email",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://emailrep.io/report",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Report an email address as exhibiting malicious behavior so the EmailRep reputation graph picks up the signal. Requires an API key. Submit one or more `tags` (such as `bec`, `maldoc`, `phishing`, `account_takeover`, `spam`), an optional human-readable `description`, the `timestamp` when the activity was observed (Unix epoch seconds, defaults to now), and an optional `expires` window in hours during which the address should be treated as risky."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

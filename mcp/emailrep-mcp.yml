@@ -1,0 +1,123 @@
+generated: '2026-08-13'
+method: probed
+status: published
+source: https://docs.sublime.security/mcp
+deployment:
+  mode: remote
+  endpoint: https://docs.sublime.security/mcp
+  install: null
+  package: null
+  auth: none
+  verified: probed
+server:
+  name: sublime-security-docs
+  transport: http
+  protocol: JSON-RPC 2.0 over HTTP with text/event-stream responses
+  url: https://docs.sublime.security/mcp
+  operator: Sublime Security, Inc.
+  provider_of_record: ReadMe (docs.sublime.security is a ReadMe-hosted docs project; the MCP
+    endpoint is ReadMe's docs/OAS MCP surface enabled on that project)
+ownership:
+  justified: true
+  statement: >-
+    EmailRep is operated by Sublime Security, Inc. — emailrep.io's own footer says "Operated by
+    Sublime Security, Inc" and links sublimesecurity.com/terms and /privacy, and
+    docs.emailrep.io 302s to this documentation host. The MCP server is served from that same
+    documentation host, and `list-specs` returns "EmailRep Alpha API" as one of three registered
+    OpenAPI specs, so this endpoint really does expose EmailRep's contract — not just a sibling
+    product's.
+scope:
+  emailrep_specific: false
+  note: >-
+    HONEST SCOPE. This is a documentation/OpenAPI navigation MCP, not a hand-built EmailRep tool
+    server. The six tools are generic ReadMe tools that operate over whichever OpenAPI spec you
+    name in the `title` argument. Against `title: "EmailRep Alpha API"` they return EmailRep's
+    real two operations; against "Sublime Platform API" or "Multi-Tenancy API (BETA)" they return
+    Sublime's other products. `execute-request` is a generic HAR-request executor, so an agent CAN
+    reach GET https://emailrep.io/{email} and POST https://emailrep.io/report through it, but it
+    is not a purpose-built EmailRep tool and it carries no EmailRep credential.
+probe:
+  method: POST
+  body: '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'
+  headers:
+    Accept: application/json, text/event-stream
+    Content-Type: application/json
+  http_status: 200
+  authenticated: false
+  fetched: '2026-08-13'
+  raw: mcp/emailrep-docs-mcp-tools-list.json
+specs_exposed:
+  - title: EmailRep Alpha API
+    description_snippet: >-
+      EmailRep is a system of crawlers, scanners and enrichment services that collects data on
+      email addresses, domains, and internet personas. ... Operated by Sublime Security
+    operations: 2
+    paths:
+      - 'GET /{email} — Query an email'
+      - 'POST /report — Report an email address'
+    servers: [https://emailrep.io, 'http://emailrep.io']
+  - title: Sublime Platform API
+    note: Sibling product — not EmailRep.
+  - title: Multi-Tenancy API (BETA)
+    note: Sibling product — not EmailRep.
+tools:
+  - name: list-endpoints
+    title: List API Endpoints
+    description: >-
+      Lists all API paths and their HTTP methods with summaries, organized by path. Results can be
+      passed directly into 'get-endpoint'.
+    input_schema:
+      required: [title]
+      properties: [title]
+    read_only: true
+  - name: get-endpoint
+    title: Get Endpoint Details
+    description: >-
+      Gets detailed information about a specific API endpoint, including security schemes and
+      servers.
+    input_schema:
+      required: [path, method, title]
+      properties: [path, method, title]
+    read_only: true
+  - name: search-endpoints
+    title: Search API Endpoints
+    description: >-
+      Performs a deep search through paths, operations, and parameters to discover relevant API
+      endpoints.
+    input_schema:
+      required: [pattern]
+      properties: [pattern]
+    read_only: true
+  - name: list-specs
+    title: List OpenAPI Specs
+    description: Lists all available OpenAPI specs. Use the title to select a spec.
+    input_schema:
+      required: []
+      properties: []
+    read_only: true
+  - name: execute-request
+    title: Execute API Request
+    description: Executes an API request with a given HAR request object.
+    input_schema:
+      required: [harRequest]
+      properties: [harRequest, title]
+    read_only: false
+  - name: get-server-variables
+    title: Get Server Variables
+    description: Returns the server variables declared by the named OpenAPI spec.
+    input_schema:
+      required: [title]
+      properties: [title]
+    read_only: true
+finding:
+  headline: >-
+    The provider's own OpenAPI for EmailRep is live and reachable — through their MCP server, not
+    through any URL.
+  detail: >-
+    There is no downloadable OpenAPI anywhere on emailrep.io or the docs host (every one of
+    /openapi.json, /openapi.yaml, /swagger.json, /api-docs 404s). But the ReadMe project has an
+    OpenAPI registered under the title "EmailRep Alpha API", and the MCP `get-endpoint` tool
+    returns it operation-by-operation, including servers[], securitySchemes and full component
+    schemas. The retrieved fragments are saved verbatim to
+    mcp/emailrep-provider-oas-fragments.json and reassembled into
+    openapi/_original/emailrep-alpha-api-openapi.json.

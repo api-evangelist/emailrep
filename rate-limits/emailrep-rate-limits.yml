@@ -1,3 +1,7 @@
+generated: '2026-08-13'
+method: searched
+source: https://docs.sublime.security/reference/emailrep-introduction
+limit_count: 5
 specification: API Commons Rate Limits
 specificationVersion: '0.1'
 schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
@@ -24,11 +28,56 @@ sources:
   - https://emailrep.io
   - https://emailrep.io/key
   - https://docs.sublimesecurity.com/reference/emailrep-introduction
+window:
+  type: rolling
+  period: 24 hours
+  note: >-
+    "Rate-limits are enforced using a rolling 24-hour window, not by calendar day." Waiting for
+    midnight does not reset the allowance — callers must back off.
+  source: https://docs.sublime.security/reference/emailrep-introduction
 responseCodes:
   throttled: 429
   quotaExceeded: 429
 headers:
-  retryAfter: Retry-After
+  responseHeaders:
+    - name: X-Rate-Limit-Daily-Remaining
+      direction: response
+      description: >-
+        Requests remaining in the rolling 24-hour window. Returned for keys carrying a daily
+        quota (the free Community tier). Verbatim from the provider's docs.
+    - name: X-Rate-Limit-Monthly-Remaining
+      direction: response
+      description: >-
+        Requests remaining in the monthly quota. Returned for keys carrying a monthly quota.
+        Verbatim from the provider's docs.
+  retryAfter: null
+  retryAfterNote: >-
+    No Retry-After header is documented, and none was observed on the live 429 (the response
+    carried only nginx defaults). Callers must implement their own backoff.
+  ietfDraftHeaders: false
+  observed:
+    fetched: '2026-08-13'
+    url: https://emailrep.io/bill@microsoft.com
+    http_status: 429
+    response_headers_seen: [Server, Date, Content-Type, Content-Length, Connection]
+    note: >-
+      No X-Rate-Limit-* headers were present on the anonymous 429, because that 429 is not a rate
+      limit — see the overloaded-429 warning below. The documented headers require an API key to
+      observe.
+overloaded429:
+  warning: >-
+    429 carries TWO unrelated meanings on this API and the status code alone cannot separate
+    them. Read the JSON `reason` field.
+  conditions:
+    - condition: quota exhausted
+      retryable: true
+      action: exponential backoff against the rolling window
+    - condition: anonymous access disabled
+      reason: 'the unauthenticated API is currently disabled. please use an API key'
+      retryable: false
+      action: >-
+        Supply an API key. Retrying will never succeed. Observed live on 2026-08-13 — the docs
+        still advertise the keyless tier as available.
 limits:
   - name: Anonymous (no API key)
     scope: IP

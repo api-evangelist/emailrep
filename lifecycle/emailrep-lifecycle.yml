@@ -1,0 +1,83 @@
+generated: '2026-08-13'
+method: searched
+source: https://docs.sublime.security/reference/emailrep-introduction
+also_probed:
+  - https://status.sublime.security/
+  - https://statuspage.incident.io/sublime/customer
+  - https://github.com/sublime-security/emailrep.io
+versioning:
+  scheme: none
+  current: null
+  docs: https://docs.sublime.security/reference/emailrep-introduction
+  detail: >-
+    Unversioned. No version path segment, no version header, no dated version. The provider's own
+    OpenAPI (retrieved through their MCP server) is titled "EmailRep Alpha API" and the public
+    repo README titles it "EmailRep Alpha Risk API". The only version signal EmailRep gives is
+    the word "Alpha", and it has carried that label for years.
+deprecation:
+  policy_url: null
+  sunset_header: false
+  deprecation_header: false
+  detail: >-
+    No deprecation policy, no RFC 8594 Sunset/Deprecation header support, and no announced
+    end-of-life. No `Deprecation` pointer is emitted in apis.yml.
+  observed_undeclared_change:
+    what: The keyless tier the docs still advertise has been switched off with no notice.
+    evidence:
+      url: https://emailrep.io/bill@microsoft.com
+      http_status: 429
+      body: '{"status": "fail", "reason": "the unauthenticated API is currently disabled. please use an API key"}'
+      fetched: '2026-08-13'
+    docs_still_say: >-
+      "An API key is not required to use the EmailRep API, but using one will afford you higher
+      rate limits than the unauthenticated API." — docs last updated 2025-11-11.
+    note: >-
+      This is exactly the kind of change a deprecation policy exists to announce. A caller who
+      built against the documented anonymous tier gets a 429 with no Sunset header, no changelog
+      entry, and no dated notice.
+sla:
+  url: null
+  uptime_target: null
+  detail: >-
+    No published SLA for EmailRep. The plans artifact records that the Enterprise tier includes
+    "support with SLA", but no SLA document or uptime target is published.
+status_page:
+  url: https://status.sublime.security/
+  public: false
+  http_status: 302
+  redirects_to: https://statuspage.incident.io/sublime/customer
+  detail: >-
+    Sublime Security runs an incident.io status page, but it is CUSTOMER-GATED — the redirect
+    target renders "Status page sign in for customers" and requires an email login. It also does
+    not name EmailRep as a component in any anonymously visible content. No `StatusPage` pointer
+    is emitted in apis.yml: the operational-transparency check asserts a publicly readable status
+    page, and this one is not.
+  probed: '2026-08-13'
+changelog:
+  url: null
+  detail: >-
+    No changelog, release notes, or "what's new" page for EmailRep on either emailrep.io or the
+    Sublime docs host — confirmed by grepping the full docs index at
+    https://docs.sublime.security/llms.txt (207 entries, zero changelog/release-notes pages).
+    No `changelog/` artifact is written.
+support:
+  url: https://emailrep.io/contact
+  http_status: 200
+  issue_tracker: https://github.com/sublime-security/emailrep.io/issues
+  detail: >-
+    The public API repo still accepts issues (7 open as of 2026-08-13) but was last pushed
+    2024-03-16.
+maintenance_signals:
+  - signal: First-party Python SDK last released 2021-01-22 (v0.0.5); repo last pushed 2021-01-22.
+    source: packages/emailrep-packages.yml
+  - signal: Public API repo sublime-security/emailrep.io last pushed 2024-03-16, 374 stars, 7 open issues, not archived.
+    source: https://github.com/sublime-security/emailrep.io
+  - signal: EmailRep reference pages on the docs host last updated 2025-11-11.
+    source: https://docs.sublime.security/reference/emailrep-introduction.md
+  - signal: >-
+      The docs surface has SHRUNK. apis.yml pointed at
+      docs.sublimesecurity.com/reference/emailrep-quickstart; that page now 404s. Only two
+      EmailRep pages remain in the entire Sublime docs index — "Introduction" and
+      "Client libraries".
+    source: https://docs.sublime.security/llms.txt
+deprecated_operations: []

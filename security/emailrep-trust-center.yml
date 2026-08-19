@@ -1,0 +1,48 @@
+generated: '2026-08-13'
+method: probed
+probe: true
+url: https://trust.sublime.security/
+http_status: 200
+title: Sublime Security Trust Center
+certifications: []
+ownership:
+  justified: true
+  statement: >-
+    EmailRep is operated by Sublime Security, Inc. — emailrep.io's own footer reads "Operated by
+    Sublime Security, Inc" and links sublimesecurity.com/terms and /privacy — so the operator's
+    trust center is the trust surface that governs this API. It is a parent-brand page, not an
+    EmailRep-specific one.
+detail: >-
+  The trust center exists and resolves (trust.sublimesecurity.com 301s to
+  trust.sublime.security, which returns HTTP 200 with the document title "Sublime Security Trust
+  Center"). It is rendered entirely client-side: the 4,961-byte anonymous response carries the
+  title and nothing else — no certification names, no controls, no subprocessor list, no security
+  contact. Two independent anonymous reads on 2026-08-13 (curl and a rendering fetch) both
+  returned zero named frameworks.
+  Because NO certification could be verified anonymously, `certifications` is an empty list and
+  NO `Compliance` pointer is emitted in apis.yml. Recording the page as present without a
+  verified cert would credit a compliance posture that was not observed. This is a real finding
+  about the trust center, not a failure to look: a trust center that a machine cannot read is
+  a trust center that agents and procurement bots cannot use.
+evidence:
+  - source: https://trust.sublime.security/
+    http_status: 200
+    content_type: text/html
+    bytes: 4961
+    extractable_text: 'Sublime Security Trust Center'
+  - source: https://trust.sublimesecurity.com
+    http_status: 301
+    redirects_to: https://trust.sublime.security/
+vulnerability_disclosure:
+  found: false
+  detail: >-
+    No vulnerability-disclosure artifact is written and no `Security` pointer is emitted. Probed
+    on 2026-08-13: emailrep.io/.well-known/security.txt 404, emailrep.io/security 404,
+    emailrep.io/responsible-disclosure 404, hackerone.com/sublime_security 404,
+    bugcrowd.com/sublimesecurity 404. sublime.security/security and
+    sublime.security/responsible-disclosure could not be read — that host answers every anonymous
+    request with HTTP 429 behind a Vercel Security Checkpoint, so their existence is unknown
+    rather than disproved.
+related:
+  - security/emailrep-domain-security.yml
+  - well-known/emailrep-well-known.yml

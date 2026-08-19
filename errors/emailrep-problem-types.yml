@@ -1,0 +1,86 @@
+generated: '2026-08-13'
+method: searched
+source: https://docs.sublime.security/reference/emailrep-introduction
+derived_from:
+  - openapi/emailrep-reputation-api-openapi.yml
+  - openapi/emailrep-reports-api-openapi.yml
+  - openapi/_original/emailrep-alpha-api-openapi.json
+format: custom
+rfc9457: false
+envelope:
+  content_type: application/json
+  fields:
+    status: Always the string "fail" on an error.
+    reason: Human-readable failure reason. Prose — do not pattern-match it as a code.
+  example: '{"status": "fail", "reason": "invalid email address"}'
+note: >-
+  EmailRep publishes no error-code registry. There are no error codes at all — the HTTP status is
+  the only machine-readable signal, and 429 is overloaded across three distinct conditions
+  (daily quota, monthly quota, and the currently-disabled anonymous tier). The 403 case below
+  appears ONLY in the prose docs and in no OpenAPI, which is why an agent built purely from the
+  spec will fail its first call.
+problems:
+  - status: 400
+    title: Invalid email address
+    reason_example: invalid email address
+    meaning: The path parameter is not a syntactically valid email address, or the report body is missing a required field (`email` or `tags`).
+    remediation: Validate the address locally before calling. For POST /report, ensure both `email` and `tags` are present.
+    source_operation:
+      - openapi/emailrep-reputation-api-openapi.yml#queryEmailReputation
+      - openapi/emailrep-reports-api-openapi.yml#reportEmail
+  - status: 401
+    title: Invalid or missing API key
+    meaning: >-
+      The `Key` header is absent or does not resolve to a valid key. The provider's own spec
+      describes this as "Invalid api key (for authenticated requests)" on GET and
+      "Invalid api key" on POST /report.
+    remediation: Request a key at https://emailrep.io/free and send it in the `Key` header.
+    source_operation:
+      - openapi/emailrep-reputation-api-openapi.yml#queryEmailReputation
+      - openapi/emailrep-reports-api-openapi.yml#reportEmail
+  - status: 403
+    title: Missing or unacceptable User-Agent
+    meaning: >-
+      "A missing user agent will result in an HTTP 403 response." The user agent must accurately
+      describe the API consumer; a generic or misleading one may also be blocked.
+    remediation: Always send a descriptive `User-Agent` naming the consuming application.
+    source: https://docs.sublime.security/reference/emailrep-introduction
+    in_openapi: false
+    note: >-
+      Documented in prose only. Neither the provider's OpenAPI nor the refined specs in this repo
+      declare a 403 response or a User-Agent parameter.
+  - status: 429
+    title: Rate limit exceeded
+    meaning: >-
+      The caller exhausted the rolling-24-hour daily allowance or the monthly quota. Check
+      X-Rate-Limit-Daily-Remaining / X-Rate-Limit-Monthly-Remaining.
+    remediation: Back off exponentially. The window is rolling, so waiting for midnight does not help.
+    source_operation:
+      - openapi/emailrep-reputation-api-openapi.yml#queryEmailReputation
+      - openapi/emailrep-reports-api-openapi.yml#reportEmail
+  - status: 429
+    title: Anonymous access disabled
+    reason_example: the unauthenticated API is currently disabled. please use an API key
+    meaning: >-
+      NOT a rate limit. The provider has turned off the keyless tier the docs still advertise as
+      available. Observed live on 2026-08-13 against GET https://emailrep.io/bill@microsoft.com
+      with no `Key` header.
+    remediation: >-
+      Send an API key. Retrying without one will never succeed, so an agent that treats 429 as
+      "retry later" will loop forever — read the `reason` field to distinguish.
+    in_openapi: false
+    x-evidence:
+      fetched: '2026-08-13'
+      url: https://emailrep.io/bill@microsoft.com
+      http_status: 429
+      body: '{"status": "fail", "reason": "the unauthenticated API is currently disabled. please use an API key"}'
+  - status: 500
+    title: Internal server error
+    meaning: Unhandled server-side failure.
+    remediation: Retry with backoff. Safe for GET; see conventions/ before retrying POST /report.
+    source_operation:
+      - openapi/emailrep-reputation-api-openapi.yml#queryEmailReputation
+    in_provider_spec: false
+    note: >-
+      Present in this repo's refined specs but NOT in the provider's own "EmailRep Alpha API"
+      OpenAPI, which documents only 200/400/401/429.

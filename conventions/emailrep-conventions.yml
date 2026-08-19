@@ -1,0 +1,113 @@
+generated: '2026-08-13'
+method: searched
+source: https://docs.sublime.security/reference/emailrep-introduction
+also_derived_from:
+  - openapi/emailrep-reputation-api-openapi.yml
+  - openapi/emailrep-reports-api-openapi.yml
+  - openapi/_original/emailrep-alpha-api-openapi.json
+  - live probe of https://emailrep.io/bill@microsoft.com on 2026-08-13
+description: >-
+  Cross-cutting runtime semantics for the EmailRep API. EmailRep is a two-operation, unversioned,
+  flat JSON API on a single host. It has no OAuth, no pagination, no idempotency contract, no
+  webhooks and no envelope beyond a bare object — but it does carry two conventions that will
+  break an unprepared agent: a MANDATORY User-Agent header, and a rolling-24-hour rate limit
+  surfaced on custom response headers.
+base_url: https://emailrep.io
+authentication:
+  style: api-key-header
+  header: Key
+  documented_as_optional: true
+  actually_optional: false
+  detail: >-
+    The docs say "An API key is not required to use the EmailRep API, but using one will afford
+    you higher rate limits than the unauthenticated API." That is no longer true in production.
+    A live anonymous GET https://emailrep.io/bill@microsoft.com on 2026-08-13 returned HTTP 429
+    with the body {"status": "fail", "reason": "the unauthenticated API is currently disabled.
+    please use an API key"}. Treat the key as REQUIRED for both operations.
+  invalid_key: HTTP 401
+  key_signup: https://emailrep.io/free
+  cross_link: authentication/emailrep-authentication.yml
+user_agent:
+  required: true
+  detail: >-
+    "Each request to the API must be accompanied by a user agent request header. Typically this
+    should be the name of the app consuming the service. A missing user agent will result in an
+    HTTP 403 response." The user agent should accurately describe the API consumer; a generic or
+    misleading one may be blocked. This is the single most commonly missed EmailRep convention
+    and it is NOT expressed in any OpenAPI — it exists only in prose.
+  missing_user_agent: HTTP 403
+idempotency:
+  supported: false
+  detail: >-
+    No Idempotency-Key header, no idempotency parameter, and no documented replay semantics.
+    POST /report is an append to a reputation graph — resubmitting the same report is not safe
+    to assume as a no-op. No `Idempotency` pointer is emitted in apis.yml, because there is no
+    idempotency contract to point at.
+  safe_retry:
+    - operation: queryEmailReputation
+      safe: true
+      reason: GET, read-only.
+    - operation: reportEmail
+      safe: false
+      reason: >-
+        POST with no idempotency key. On a 429 or a network failure, an agent cannot distinguish
+        "not accepted" from "accepted, response lost". Back off and re-query the address rather
+        than blindly re-reporting.
+pagination:
+  supported: false
+  detail: >-
+    Neither operation returns a collection. GET /{email} returns a single object; the `profiles`
+    field is a bare string array with no page/cursor semantics.
+field_expansion:
+  supported: partial
+  detail: >-
+    One flag only — `?summary=true` on GET /{email} adds a human-readable `summary` string to the
+    response. There are no sparse-fieldset, expand, or include parameters.
+metadata:
+  supported: false
+request_tracing:
+  request_id_header: null
+  detail: No request-id or correlation header is documented or observed.
+versioning:
+  scheme: none
+  current: null
+  detail: >-
+    The API is unversioned. There is no version segment in the path, no version header, and no
+    date-based version. The provider's own OpenAPI is titled "EmailRep Alpha API" and the public
+    repo README calls it the "EmailRep Alpha Risk API" — the only version signal the provider
+    gives is the word "Alpha", which has been unchanged since at least 2021.
+  cross_link: lifecycle/emailrep-lifecycle.yml
+error_envelope:
+  format: custom
+  rfc9457: false
+  shape:
+    status: string — always "fail" on error, "success" on a successful POST /report
+    reason: string — human-readable failure reason
+  example: '{"status": "fail", "reason": "the unauthenticated API is currently disabled. please use an API key"}'
+  content_type: application/json; charset=UTF-8
+  detail: >-
+    There is no `type` URI, no `title`, no `detail`, no `instance` — this predates and does not
+    implement RFC 9457. The machine-readable part of an EmailRep error is the HTTP status code;
+    `reason` is prose and should not be pattern-matched.
+  cross_link: errors/emailrep-problem-types.yml
+rate_limit_signaling:
+  window: rolling 24 hours (not calendar day)
+  headers:
+    - name: X-Rate-Limit-Daily-Remaining
+      note: Returned for keys carrying a daily quota (Free / Community tier).
+    - name: X-Rate-Limit-Monthly-Remaining
+      note: Returned for keys carrying a monthly quota.
+  exhaustion_status: 429
+  retry_after: >-
+    Not documented. The docs describe the window as rolling, so a caller must back off rather
+    than wait for a calendar boundary. NOTE: 429 is also returned for the "unauthenticated API is
+    currently disabled" condition, which is NOT a rate limit — an agent must read the `reason`
+    field to tell the two apart, because the status code alone is ambiguous.
+  cross_link: rate-limits/emailrep-rate-limits.yml
+transport:
+  https: true
+  http_supported: true
+  detail: >-
+    The provider's own spec lists BOTH https://emailrep.io and http://emailrep.io in servers[].
+    Never use the plaintext server — an email address under investigation is sensitive input.
+    See security/emailrep-domain-security.yml (no HSTS is served on emailrep.io).

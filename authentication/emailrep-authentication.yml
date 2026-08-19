@@ -1,18 +1,66 @@
-generated: '2026-07-11'
-method: derived
-source: openapi/emailrep-api-openapi.yml
+generated: '2026-08-13'
+method: searched
+docs: https://docs.sublime.security/reference/emailrep-introduction
+source: >-
+  https://docs.sublime.security/reference/emailrep-introduction, upgraded from the derived
+  baseline over openapi/emailrep-reports-api-openapi.yml and
+  openapi/emailrep-reputation-api-openapi.yml, and cross-checked against the provider's own
+  OpenAPI at openapi/_original/emailrep-alpha-api-openapi.json.
 summary:
   types:
   - apiKey
   api_key_in:
   - header
+  oauth2_flows: []
+  scopes: none
+  mtls: false
 schemes:
 - name: ApiKeyAuth
   type: apiKey
   in: header
   parameter: Key
-  description: EmailRep API key issued at https://emailrep.io/key. Free tier is available; the
-    Commercial and Enterprise tiers raise the per-month and per-day quotas. The key is passed
-    in the `Key` HTTP header on every request.
+  description: >-
+    EmailRep API key. The docs show it verbatim as `Key: [your api key]` alongside the request
+    line `GET https://emailrep.io/{email}`. The provider's own OpenAPI names this scheme simply
+    `Key` and applies it to POST /report; the refined specs in this repo name it `ApiKeyAuth`.
+    Same header, same value.
+  signup: https://emailrep.io/free
+  invalid_key_status: 401
   sources:
-  - openapi/emailrep-api-openapi.yml
+  - openapi/emailrep-reports-api-openapi.yml
+  - openapi/emailrep-reputation-api-openapi.yml
+  - openapi/_original/emailrep-alpha-api-openapi.json
+  - https://docs.sublime.security/reference/emailrep-introduction
+second_factor:
+  name: User-Agent
+  required: true
+  type: http-header
+  missing_status: 403
+  description: >-
+    NOT an auth scheme in any spec, but functionally a gate: "Each request to the API must be
+    accompanied by a user agent request header ... A missing user agent will result in an HTTP 403
+    response. The user agent should accurately describe the nature of the API consumer such that
+    it can be clearly identified in the request. Not doing so may result in the request being
+    blocked." An agent that omits it never reaches the key check.
+  source: https://docs.sublime.security/reference/emailrep-introduction
+anonymous_access:
+  documented: true
+  actual: false
+  detail: >-
+    The docs state a key is optional. Production disagrees. An anonymous
+    GET https://emailrep.io/bill@microsoft.com on 2026-08-13 returned HTTP 429 with
+    {"status": "fail", "reason": "the unauthenticated API is currently disabled. please use an
+    API key"}. Both operations should be treated as key-required.
+  x-evidence:
+    fetched: '2026-08-13'
+    url: https://emailrep.io/bill@microsoft.com
+    http_status: 429
+per_operation:
+  - operation: queryEmailReputation
+    security: 'ApiKeyAuth (documented optional; enforced in production)'
+  - operation: reportEmail
+    security: "ApiKeyAuth (required — the provider's own spec applies `security: [{Key: []}]` to this operation only)"
+example_request: |
+  GET https://emailrep.io/{email}
+  Key: [your api key]
+  User-Agent: [your app name]

@@ -1,0 +1,51 @@
+generated: '2026-08-13'
+method: probed
+source: live HTTP probes of the API host and the documentation host
+note: >-
+  EVERY /.well-known/ path 404s on both hosts. No WellKnown or SecurityTxt pointer is emitted
+  in apis.yml — a recorded absence is data, not a served surface. emailrep.io answers /.well-known/*
+  with its own styled 404 page (3,941 bytes, text/html); docs.sublime.security answers with the
+  ReadMe 404 shell. Neither returned a document.
+hosts:
+  - host: https://emailrep.io
+    role: api + website (OpenAPI servers[] and apis.yml baseURL)
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+  - host: https://docs.sublime.security
+    role: documentation host (docs.emailrep.io 302s here via docs.sublimesecurity.com)
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+  - host: https://docs.sublimesecurity.com
+    role: legacy documentation host named in apis.yml
+    documents:
+      - path: /.well-known/security.txt
+        status: 429
+        note: >-
+          Not a 404 and not a document — this host sits behind a Vercel Security Checkpoint that
+          answers every anonymous request with HTTP 429 and a JavaScript challenge page. The same
+          ReadMe project is served cleanly from docs.sublime.security, which is what was probed.
+summary:
+  hits: 0
+  probed: 17
+  security_txt: false
+  api_catalog: false
+  openid_configuration: false
+  agent_card: false

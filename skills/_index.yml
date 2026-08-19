@@ -1,0 +1,22 @@
+generated: '2026-08-13'
+method: generated
+source: >-
+  Generated from openapi/emailrep-reputation-api-openapi.yml and
+  openapi/emailrep-reports-api-openapi.yml (every operationId grepped and verified),
+  https://docs.sublime.security/reference/emailrep-introduction, and the conventions/, errors/
+  and data-model/ artifacts in this repo. No provider-published skills or AGENTS.md exist —
+  searched emailrep.io, the sublime-security GitHub org and the full docs index at
+  https://docs.sublime.security/llms.txt on 2026-08-13.
+skills:
+  - file: emailrep-screen-inbound-sender.md
+    name: Screen an inbound sender with EmailRep
+    api: openapi/emailrep-reputation-api-openapi.yml
+    operations: [queryEmailReputation]
+  - file: emailrep-report-malicious-sender.md
+    name: Report a malicious sender to EmailRep
+    api: openapi/emailrep-reports-api-openapi.yml
+    operations: [reportEmail]
+  - file: emailrep-verify-before-report.md
+    name: Verify an address before reporting it to EmailRep
+    api: openapi/emailrep-reputation-api-openapi.yml
+    operations: [queryEmailReputation, reportEmail]

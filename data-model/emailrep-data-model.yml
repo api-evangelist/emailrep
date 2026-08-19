@@ -1,0 +1,144 @@
+generated: '2026-08-13'
+method: derived
+source: >-
+  openapi/emailrep-reputation-api-openapi.yml, openapi/emailrep-reports-api-openapi.yml,
+  openapi/_original/emailrep-alpha-api-openapi.json
+description: >-
+  EmailRep's data model is deliberately flat. There is exactly one addressable entity — the email
+  address — identified by its own literal value in the URL path. There are no ids, no id prefixes,
+  no nested resources and no cross-references between objects: every schema in the API is either
+  the reputation projection of an address or the report submitted against one.
+entities:
+  - name: EmailAddress
+    identifier: the address itself (path parameter on GET /{email})
+    id_prefix: null
+    persisted: implied — not directly retrievable as an object
+    description: >-
+      The only real entity. It is never returned as a resource with an id; it is only ever
+      projected through EmailReputation or targeted by ReportRequest.
+  - name: EmailReputation
+    schema: '#/components/schemas/EmailReputation'
+    provider_schema: '#/components/schemas/QueryResponse'
+    returned_by: queryEmailReputation
+    description: >-
+      The reputation projection of an address at query time. Not stored, not versioned, not
+      retrievable by id — a computed view.
+    fields:
+      - {name: email, type: string, role: identifier-echo}
+      - {name: reputation, type: string, enum: [high, medium, low, none]}
+      - {name: suspicious, type: boolean}
+      - {name: references, type: integer, note: 'count of positive and negative reputation sources, not necessarily direct mentions'}
+      - {name: summary, type: string, note: 'present only when ?summary=true'}
+      - {name: details, type: object, ref: EmailReputationDetails}
+  - name: EmailReputationDetails
+    schema: '#/components/schemas/EmailReputationDetails'
+    provider_schema: '#/components/schemas/QueryResponse_details'
+    description: The 21-field signal block. Groups below are an API Evangelist derivation, not a provider grouping.
+    field_groups:
+      threat:
+        - blacklisted
+        - malicious_activity
+        - malicious_activity_recent
+        - spam
+      exposure:
+        - credentials_leaked
+        - credentials_leaked_recent
+        - data_breach
+        - first_seen
+        - last_seen
+      domain:
+        - domain_exists
+        - domain_reputation
+        - new_domain
+        - days_since_domain_creation
+        - suspicious_tld
+      provider_class:
+        - free_provider
+        - disposable
+      deliverability:
+        - deliverable
+        - accept_all
+        - valid_mx
+      spoofing:
+        - spoofable
+        - spf_strict
+        - dmarc_enforced
+      presence:
+        - profiles
+  - name: ReportRequest
+    schema: '#/components/schemas/ReportRequest'
+    provider_schema: '#/components/schemas/body'
+    accepted_by: reportEmail
+    description: A community observation submitted against an address. Write-only — there is no read-back operation.
+    fields:
+      - {name: email, type: string, required: true, role: 'foreign-key-by-value'}
+      - {name: tags, type: 'array<string>', required: true, note: 'controlled vocabulary — see vocabulary below'}
+      - {name: description, type: string, required: false}
+      - {name: timestamp, type: integer, required: false, note: 'UTC epoch seconds; defaults to now()'}
+      - {name: expires, type: integer, required: false, note: 'hours the address stays risky; defaults to no expiration unless account_takeover is tagged, in which case 14 days'}
+  - name: ReportResponse
+    schema: '#/components/schemas/ReportResponse'
+    returned_by: reportEmail
+    fields:
+      - {name: status, type: string, enum: [success, fail]}
+      - {name: reason, type: string, note: 'present when status is fail'}
+relationships:
+  - from: EmailReputation
+    to: EmailReputationDetails
+    type: has_one
+    via: details
+    mechanism: '$ref'
+  - from: ReportRequest
+    to: EmailAddress
+    type: belongs_to
+    via: email
+    mechanism: value-reference (the address literal, no id)
+  - from: EmailReputation
+    to: EmailAddress
+    type: belongs_to
+    via: email
+    mechanism: value-reference (echoed path parameter)
+  - from: ReportRequest
+    to: EmailReputation
+    type: influences
+    via: 'tags + expires'
+    mechanism: >-
+      Not a schema link. Per the provider's spec, a report with `expires` sets
+      suspicious=true and blacklisted=true on the address's QueryResponse for that many hours —
+      the only write-to-read feedback path in the API.
+report_tag_vocabulary:
+  source: openapi/_original/emailrep-alpha-api-openapi.json (provider spec, `body.tags` description)
+  note: >-
+    Twelve tags, documented only inside the request-body description of the provider's own
+    OpenAPI — not in any prose docs page and not in this repo's refined specs. Captured here
+    verbatim because it is the closest thing EmailRep has to a controlled vocabulary.
+  tags:
+    - tag: account_takeover
+      meaning: Legitimate email has been taken over by a malicious actor
+      side_effect: default expiry becomes 14 days
+    - tag: bec
+      meaning: Business email compromise, whaling, contact impersonation/display name spoofing
+    - tag: brand_impersonation
+      meaning: Impersonating a well-known brand (e.g. Paypal, Microsoft, Google, etc.)
+    - tag: browser_exploit
+      meaning: The hosted website serves an exploit
+    - tag: credential_phishing
+      meaning: Attempting to steal user credentials
+    - tag: generic_phishing
+      meaning: Generic phishing — use only when a more specific determination cannot be made
+    - tag: malware
+      meaning: Malicious documents and droppers — direct attachments, free file hosting, or droppers from malicious websites
+    - tag: scam
+      meaning: Catch-all for scams — sextortion, payment, lottery, investment, fake bank
+    - tag: spam
+      meaning: Unsolicited spam or spammy behavior
+    - tag: spoofed
+      meaning: Forged sender email — envelope from differs from header from
+    - tag: task_request
+      meaning: Request that the recipient perform a task (gift card purchase, update payroll, send w-2s)
+    - tag: threat_actor
+      meaning: Threat actor or owner of a phishing kit
+  divergence_note: >-
+    This repo's openapi/emailrep-reports-api-openapi.yml carries `maldoc` in its example tags.
+    `maldoc` appears in the provider's Python SDK README example and in the older public README,
+    but it is NOT in the provider's own OpenAPI tag list above, where the equivalent is `malware`.

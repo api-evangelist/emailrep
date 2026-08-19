@@ -1,0 +1,80 @@
+generated: '2026-08-13'
+method: derived
+source: >-
+  openapi/emailrep-reputation-api-openapi.yml, openapi/emailrep-reports-api-openapi.yml,
+  openapi/_original/emailrep-alpha-api-openapi.json, and
+  https://docs.sublime.security/reference/emailrep-introduction
+note: >-
+  Nothing here is a provider claim. Sublime Security publishes a trust center at
+  trust.sublime.security, but it renders client-side and named no certification anonymously, so
+  no `Compliance` pointer is emitted — see security/emailrep-trust-center.yml.
+standards:
+  - id: openapi-3
+    conforms: true
+    evidence: >-
+      The provider registers an OpenAPI 3.0.0 document titled "EmailRep Alpha API" in its ReadMe
+      docs project; retrieved operation-by-operation through the docs MCP server and reassembled
+      to openapi/_original/emailrep-alpha-api-openapi.json. Not downloadable from any URL.
+  - id: oauth2
+    conforms: false
+    evidence: No oauth2 securityScheme in any spec; docs document only a `Key` API-key header.
+  - id: oidc
+    conforms: false
+    evidence: /.well-known/openid-configuration returns 404 on emailrep.io.
+  - id: rfc9457-problem-details
+    conforms: false
+    evidence: >-
+      Errors return a custom {"status":"fail","reason":"..."} object as application/json, not
+      application/problem+json. See errors/emailrep-problem-types.yml.
+  - id: rfc9116-security-txt
+    conforms: false
+    evidence: /.well-known/security.txt returns 404 on emailrep.io and on the docs host.
+  - id: rfc8594-sunset-header
+    conforms: false
+    evidence: >-
+      No Sunset or Deprecation header support, and no deprecation policy. The anonymous tier was
+      switched off with no header and no notice — see lifecycle/emailrep-lifecycle.yml.
+  - id: rfc8615-well-known
+    conforms: false
+    evidence: All seven probed /.well-known/ paths 404. See well-known/emailrep-well-known.yml.
+  - id: rfc6750-bearer
+    conforms: false
+    evidence: Auth is a custom `Key` header, not Authorization/Bearer.
+  - id: idempotency-key
+    conforms: false
+    evidence: No idempotency header or parameter on POST /report. See conventions/.
+  - id: pagination
+    conforms: false
+    evidence: Neither operation returns a collection; no page/cursor/limit parameters exist.
+  - id: rate-limit-headers
+    conforms: partial
+    evidence: >-
+      Custom X-Rate-Limit-Daily-Remaining / X-Rate-Limit-Monthly-Remaining headers, documented at
+      https://docs.sublime.security/reference/emailrep-introduction. These are vendor-prefixed,
+      not the IETF draft RateLimit-Limit/Remaining/Reset triple, and no Retry-After is documented.
+  - id: mcp
+    conforms: true
+    evidence: >-
+      https://docs.sublime.security/mcp answers an anonymous tools/list with HTTP 200 over
+      JSON-RPC 2.0 with text/event-stream. Six tools, generic ReadMe docs/OAS tools — see
+      mcp/emailrep-mcp.yml for the honest scope.
+  - id: a2a
+    conforms: false
+    evidence: >-
+      /.well-known/agent-card.json and /.well-known/agent.json return 404 on emailrep.io,
+      docs.sublime.security and docs.sublimesecurity.com. No agent card exists; none was authored.
+  - id: asyncapi
+    conforms: false
+    applicable: false
+    evidence: >-
+      EmailRep has no event, streaming or webhook surface at all — reputation is pull-only. Not a
+      gap; the asyncapi family is out of scope for this provider and no artifact is written.
+  - id: graphql
+    conforms: false
+    applicable: false
+    evidence: No GraphQL surface is documented or discoverable.
+  - id: tls
+    conforms: partial
+    evidence: >-
+      TLSv1.2 on emailrep.io with no HSTS, and the provider's own spec still lists a plaintext
+      http://emailrep.io server. See security/emailrep-domain-security.yml.

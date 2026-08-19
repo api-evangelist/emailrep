@@ -1,0 +1,70 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the EmailRep Reports API
+  version: 1.0.0
+x-generated: '2026-08-13'
+x-method: generated
+x-source: >-
+  Enhancements derived from https://docs.sublime.security/reference/emailrep-introduction and the
+  provider's own OpenAPI at openapi/_original/emailrep-alpha-api-openapi.json, retrieved through
+  the Sublime docs MCP server on 2026-08-13. Never mutate the original spec.
+extends: openapi/emailrep-reports-api-openapi.yml
+actions:
+  - target: $.info
+    description: Record provenance.
+    update:
+      x-apievangelist-enriched: '2026-08-13'
+      x-provider-spec-title: EmailRep Alpha API
+  - target: $.paths['/report'].post
+    description: Add the prose-only User-Agent requirement and the non-idempotency warning.
+    update:
+      x-required-headers:
+        - name: User-Agent
+          required: true
+          missing_status: 403
+      x-idempotency:
+        supported: false
+        note: >-
+          No Idempotency-Key and no documented replay semantics. On a timeout an agent cannot
+          tell "not accepted" from "accepted, response lost" — re-query the address rather than
+          re-submitting the report.
+  - target: $.paths['/report'].post.responses
+    description: Document the 403 for a missing User-Agent.
+    update:
+      '403':
+        description: Forbidden — no User-Agent header, or one that could not be identified.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Error'
+  - target: $.components.schemas.ReportRequest.properties.tags
+    description: >-
+      Attach the provider's own twelve-tag controlled vocabulary, which exists only inside the
+      request-body description of their registered OpenAPI and is absent from this spec.
+    update:
+      x-controlled-vocabulary:
+        source: openapi/_original/emailrep-alpha-api-openapi.json
+        values:
+          - account_takeover
+          - bec
+          - brand_impersonation
+          - browser_exploit
+          - credential_phishing
+          - generic_phishing
+          - malware
+          - scam
+          - spam
+          - spoofed
+          - task_request
+          - threat_actor
+        note: >-
+          The `maldoc` value used in this spec's example (and in the provider's own Python SDK
+          README) does NOT appear in the provider's OpenAPI tag list; the equivalent there is
+          `malware`.
+  - target: $.components.schemas.ReportRequest.properties.expires
+    description: Capture the default-expiry behaviour stated in the provider's spec.
+    update:
+      x-default-behavior: >-
+        Defaults to no expiration, unless the account_takeover tag is specified, in which case
+        the default is 14 days. While a report is active the address returns suspicious=true and
+        blacklisted=true from GET /{email}.

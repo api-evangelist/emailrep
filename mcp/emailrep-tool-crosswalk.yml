@@ -1,0 +1,93 @@
+generated: '2026-08-13'
+method: derived
+source: >-
+  mcp/emailrep-docs-mcp-tools-list.json (live tools/list, HTTP 200, unauthenticated) bound
+  against openapi/emailrep-reputation-api-openapi.yml and
+  openapi/emailrep-reports-api-openapi.yml.
+surfaces:
+  openapi:
+    - file: openapi/emailrep-reputation-api-openapi.yml
+      operations: [queryEmailReputation]
+    - file: openapi/emailrep-reports-api-openapi.yml
+      operations: [reportEmail]
+    - file: openapi/_original/emailrep-alpha-api-openapi.json
+      note: >-
+        The provider's own spec, titled "EmailRep Alpha API", reassembled from MCP get-endpoint
+        responses. Same two operations, unnamed (no operationId in the provider spec).
+  graphql: null
+  mcp:
+    url: https://docs.sublime.security/mcp
+    gated: false
+    note: >-
+      tools/list returns 200 anonymously. The tools are ReadMe's generic docs/OAS tools, not
+      EmailRep-named tools, so this crosswalk is a CAPABILITY map (which tool can reach which
+      REST operation) rather than a 1:1 tool→operation binding.
+crosswalk:
+  - tool: list-endpoints
+    category: discovery
+    rest: [queryEmailReputation, reportEmail]
+    binding: spec-navigation
+    confidence: high
+    note: >-
+      With title "EmailRep Alpha API" it returns exactly the two EmailRep operations:
+      {"/{email}":{"get":"Query an email"},"/report":{"post":"Report an email address"}}.
+      Verified by live call on 2026-08-13.
+  - tool: get-endpoint
+    category: discovery
+    rest: [queryEmailReputation, reportEmail]
+    binding: spec-navigation
+    confidence: high
+    note: >-
+      Returns the operation's parameters, requestBody, responses, servers[] and securitySchemes
+      from the provider's own spec — this is where the real inputSchema for both EmailRep
+      operations comes from. Verified by live call for both operations on 2026-08-13.
+  - tool: search-endpoints
+    category: discovery
+    rest: [queryEmailReputation, reportEmail]
+    binding: spec-navigation
+    confidence: medium
+    note: >-
+      Searches across all three registered specs, so results are not scoped to EmailRep. Not
+      exercised against an EmailRep-specific pattern in this pass.
+  - tool: get-server-variables
+    category: discovery
+    rest: []
+    binding: spec-navigation
+    confidence: high
+    note: >-
+      The EmailRep spec declares no templated server variables (servers are the literal
+      https://emailrep.io and http://emailrep.io), so this tool returns nothing useful here.
+  - tool: execute-request
+    category: execution
+    rest: [queryEmailReputation, reportEmail]
+    binding: generic-har-proxy
+    confidence: medium
+    note: >-
+      Generic HAR-request executor. An agent can use it to call GET https://emailrep.io/{email}
+      and POST https://emailrep.io/report, but it is not an EmailRep-specific tool, it carries no
+      EmailRep API key, and EmailRep now rejects unauthenticated calls (see rest_only note). Not
+      exercised in this pass — probing a third-party execution proxy against a live reputation
+      API would be an unsolicited write.
+mcp_only:
+  - tool: list-specs
+    reason: >-
+      Pure MCP-server metadata — enumerates the three OpenAPI specs registered in the ReadMe
+      project. No REST equivalent exists on emailrep.io.
+rest_only: []
+coverage:
+  tools_named: 6
+  tools_bound_to_emailrep_rest: 5
+  mcp_only: 1
+  rest_ops_total: 2
+  rest_ops_with_a_tool: 2
+  note: >-
+    Both EmailRep REST operations are reachable from the MCP surface, but only through generic
+    tools. There is no `emailrep_query` or `emailrep_report` tool — a purpose-built EmailRep MCP
+    server does not exist as of 2026-08-13.
+divergence:
+  headline: The MCP surface is richer than the public web surface, and poorer than a real tool server.
+  detail: >-
+    Richer, because the provider's OpenAPI for EmailRep is only retrievable through this MCP
+    endpoint — no /openapi.json exists on any EmailRep or Sublime host. Poorer, because nothing
+    here is EmailRep-shaped: an agent must know the exact spec title string "EmailRep Alpha API"
+    to reach the contract at all, and must then hand-build the HTTP call itself.

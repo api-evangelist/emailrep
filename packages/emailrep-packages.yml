@@ -1,0 +1,122 @@
+generated: '2026-08-13'
+method: searched
+source: >-
+  https://docs.sublime.security/reference/emailrep-client-libraries plus registry metadata
+  endpoints (pypi.org, powershellgallery.com OData, api.nuget.org, proxy.golang.org,
+  registry.npmjs.org) and the GitHub REST API.
+note: >-
+  EmailRep publishes exactly ONE first-party client library — the Python package/CLI maintained
+  in the sublime-security GitHub org. Everything else on the provider's own "Client libraries"
+  page is explicitly labelled "Community developed clients", so `official` is false for all of
+  them. The first-party Python SDK last shipped 0.0.5 on 2021-01-22 (five years before this
+  probe) and its GitHub repo was last pushed 2021-01-22 — the strongest decay signal available
+  for this provider, and consistent with the API itself still carrying the title
+  "EmailRep Alpha API" in the provider's own OpenAPI.
+packages:
+  - language: python
+    registry: pypi
+    name: emailrep
+    url: https://pypi.org/project/emailrep/
+    install: pip3 install emailrep --upgrade
+    repository: https://github.com/sublime-security/emailrep.io-python
+    official: true
+    version: 0.0.5
+    published: '2021-01-22'
+    license: MIT
+    provides: [library, cli]
+    note: >-
+      First-party. Ships both a python3 library (`from emailrep import EmailRep`) and an
+      `emailrep` CLI (`emailrep setup -k <key>`, `emailrep <address>`, `emailrep --report`).
+      Registry metadata read from https://pypi.org/pypi/emailrep/json.
+  - language: powershell
+    registry: powershellgallery
+    name: PSEmailRep
+    url: https://www.powershellgallery.com/packages/PSEmailRep
+    install: Install-Module PSEmailRep
+    repository: https://github.com/arnydo/PSEmailRep
+    official: false
+    version: 1.2.2
+    published: '2020-10-14'
+    license: MIT
+    note: >-
+      Community client listed on the provider's own client-libraries page. Version and date
+      read from the PowerShell Gallery OData endpoint
+      (powershellgallery.com/api/v2/Packages()?$filter=Id eq 'PSEmailRep').
+  - language: dotnet
+    registry: nuget
+    name: EmailRep.NET
+    url: https://www.nuget.org/packages/EmailRep.NET
+    install: dotnet add package EmailRep.NET
+    repository: https://github.com/WestDiscGolf/EmailRep.NET
+    official: false
+    version: 0.1.0
+    published: '2020-02-22'
+    license: MIT
+    note: >-
+      Community client listed on the provider's own client-libraries page. Single published
+      version; read from api.nuget.org registration index. Repo still receives commits
+      (last push 2024-07-09) but nothing new has been published to NuGet since 2020.
+  - language: go
+    registry: goproxy
+    name: github.com/vertoforce/go-emailrep
+    url: https://pkg.go.dev/github.com/vertoforce/go-emailrep
+    install: go get github.com/vertoforce/go-emailrep
+    repository: https://github.com/vertoforce/go-emailrep
+    official: false
+    version: v0.0.0-20260715054634-45814ea24781
+    published: '2026-07-15'
+    license: null
+    note: >-
+      Community client listed on the provider's own client-libraries page. Untagged module —
+      the Go proxy serves a pseudo-version from the latest commit; read from
+      https://proxy.golang.org/github.com/vertoforce/go-emailrep/@latest. The most recently
+      updated EmailRep client of any language.
+  - language: go
+    registry: goproxy
+    name: github.com/kaiiyer/emailrep
+    url: https://pkg.go.dev/github.com/kaiiyer/emailrep
+    install: go get github.com/kaiiyer/emailrep
+    repository: https://github.com/kaiiyer/emailrep
+    official: false
+    version: v0.0.0-20201127164214-f24f4a2eee9f
+    published: '2020-11-27'
+    license: MIT
+    note: >-
+      Community client listed on the provider's own client-libraries page. Untagged module;
+      pseudo-version read from proxy.golang.org.
+  - language: r
+    registry: null
+    name: emailrep
+    url: https://git.rud.is/hrbrmstr/emailrep
+    install: null
+    repository: https://git.rud.is/hrbrmstr/emailrep
+    official: false
+    version: null
+    published: null
+    note: >-
+      Community R client listed on the provider's own client-libraries page. Not distributed
+      through CRAN or any registry with a metadata endpoint — it is self-hosted Gitea at
+      git.rud.is, which did not complete a TLS handshake on 2026-08-13 (curl exit 35), so no
+      version could be read. Checked, nothing to record.
+  - language: javascript
+    registry: npm
+    name: emailrep
+    url: https://www.npmjs.com/package/emailrep
+    install: npm install emailrep
+    repository: https://github.com/nemzyxt/emailrep
+    official: false
+    version: 1.0.3
+    published: '2024-03-16'
+    license: null
+    note: >-
+      Third-party Node.js client (author Nemuel Wainaina / npm maintainer `nemzyxt`). NOT
+      listed on the provider's client-libraries page and NOT published by Sublime Security —
+      recorded here because it is the only JavaScript client on npm and callers will find it
+      first. Metadata read from https://registry.npmjs.org/emailrep.
+summary:
+  total: 7
+  official: 1
+  community: 6
+  languages: [python, powershell, dotnet, go, r, javascript]
+  most_recent_release: '2026-07-15'
+  most_recent_official_release: '2021-01-22'

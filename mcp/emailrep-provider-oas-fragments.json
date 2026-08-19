@@ -1,0 +1,329 @@
+{
+  "GET /{email}": {
+    "openapi": "3.0.0",
+    "paths": {
+      "/{email}": {
+        "get": {
+          "tags": [
+            "Query email address"
+          ],
+          "summary": "Query an email",
+          "parameters": [
+            {
+              "name": "email",
+              "in": "path",
+              "description": "Email address being queried",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "summary",
+              "in": "query",
+              "description": "Return human-readable summary",
+              "required": false,
+              "schema": {
+                "type": "boolean"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Query successful",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/QueryResponse"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid email"
+            },
+            "401": {
+              "description": "Invalid api key (for authenticated requests)"
+            },
+            "429": {
+              "description": "Too many requests. Contact us for an api key"
+            }
+          }
+        }
+      }
+    },
+    "servers": [
+      {
+        "url": "https://emailrep.io"
+      },
+      {
+        "url": "http://emailrep.io"
+      }
+    ],
+    "components": {
+      "schemas": {
+        "QueryResponse": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "string",
+              "example": "bill@microsoft.com",
+              "description": "email address queried"
+            },
+            "reputation": {
+              "type": "string",
+              "example": "high",
+              "description": "high/medium/low/none"
+            },
+            "suspicious": {
+              "type": "boolean",
+              "example": false,
+              "description": "whether the email address should be treated as suspicious or risky"
+            },
+            "references": {
+              "type": "integer",
+              "example": 59,
+              "description": "total number of positive and negative sources of reputation. note that these may not all be direct references to the email address, but can include reputation sources for the domain or other related information"
+            },
+            "details": {
+              "$ref": "#/components/schemas/QueryResponse_details"
+            }
+          }
+        },
+        "QueryResponse_details": {
+          "type": "object",
+          "properties": {
+            "blacklisted": {
+              "type": "boolean",
+              "example": false,
+              "description": "the email is believed to be malicious or spammy"
+            },
+            "malicious_activity": {
+              "type": "boolean",
+              "example": false,
+              "description": "the email has exhibited malicious behavior (e.g. phishing or fraud)"
+            },
+            "malicious_activity_recent": {
+              "type": "boolean",
+              "example": false,
+              "description": "malicious behavior in the last 90 days (e.g. in the case of temporal account takeovers)"
+            },
+            "credentials_leaked": {
+              "type": "boolean",
+              "example": true,
+              "description": "credentials were leaked at some point in time (e.g. a data breach, pastebin, dark web, etc.)"
+            },
+            "credentials_leaked_recent": {
+              "type": "boolean",
+              "example": false,
+              "description": "credentials were leaked in the last 90 days"
+            },
+            "data_breach": {
+              "type": "boolean",
+              "example": true,
+              "description": "the email was in a data breach at some point in time"
+            },
+            "first_seen": {
+              "type": "string",
+              "example": "07/01/2008",
+              "description": "the first date the email was observed in a breach, credential leak, or exhibiting malicious or spammy behavior ('never' if never seen)"
+            },
+            "last_seen": {
+              "type": "string",
+              "example": "02/25/2019",
+              "description": "the last date the email was observed in a breach, credential leak, or exhibiting malicious or spammy behavior ('never' if never seen)"
+            },
+            "domain_exists": {
+              "type": "boolean",
+              "example": true,
+              "description": "valid domain"
+            },
+            "domain_reputation": {
+              "type": "string",
+              "example": "high",
+              "description": "high/medium/low/n/a (n/a if the domain is a free_provider, disposable, or doesn't exist)"
+            },
+            "new_domain": {
+              "type": "boolean",
+              "example": false,
+              "description": "the domain was created within the last year"
+            },
+            "days_since_domain_creation": {
+              "type": "integer",
+              "example": 10289,
+              "description": "days since the domain was created"
+            },
+            "suspicious_tld": {
+              "type": "boolean",
+              "example": false,
+              "description": "suspicious tld"
+            },
+            "spam": {
+              "type": "boolean",
+              "example": false,
+              "description": "the email has exhibited spammy behavior (e.g. spam traps, login form abuse)"
+            },
+            "free_provider": {
+              "type": "boolean",
+              "example": false,
+              "description": "the email uses a free email provider"
+            },
+            "disposable": {
+              "type": "boolean",
+              "example": false,
+              "description": "the email uses a temporary/disposable service"
+            },
+            "deliverable": {
+              "type": "boolean",
+              "example": true,
+              "description": "deliverable"
+            },
+            "accept_all": {
+              "type": "boolean",
+              "example": true,
+              "description": "whether the mail server has a default accept all policy. some mail servers return inconsistent responses, so we may default to an accept_all for those to be safe"
+            },
+            "valid_mx": {
+              "type": "boolean",
+              "example": true,
+              "description": "has an MX record"
+            },
+            "spoofable": {
+              "type": "boolean",
+              "example": false,
+              "description": "email address can be spoofed (e.g. not a strict SPF policy or DMARC is not enforced)"
+            },
+            "spf_strict": {
+              "type": "boolean",
+              "example": true,
+              "description": "sufficiently strict SPF record to prevent spoofing"
+            },
+            "dmarc_enforced": {
+              "type": "boolean",
+              "example": true,
+              "description": "DMARC is configured correctly and enforced"
+            },
+            "profiles": {
+              "type": "array",
+              "example": [
+                "spotify",
+                "linkedin",
+                "myspace",
+                "instagram",
+                "twitter",
+                "flickr",
+                "vimeo",
+                "angellist",
+                "pinterest"
+              ],
+              "description": "online profiles used by the email",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "POST /report": {
+    "openapi": "3.0.0",
+    "paths": {
+      "/report": {
+        "post": {
+          "tags": [
+            "Report email address"
+          ],
+          "summary": "Report an email address",
+          "description": "Reports an email address. Date of malicious activity defaults to the current time unless otherwise specified.",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/body"
+                }
+              }
+            },
+            "description": "Report content.",
+            "required": true
+          },
+          "security": [
+            {
+              "Key": []
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Report successful"
+            },
+            "400": {
+              "description": "Invalid input"
+            },
+            "401": {
+              "description": "Invalid api key"
+            }
+          }
+        }
+      }
+    },
+    "servers": [
+      {
+        "url": "https://emailrep.io"
+      },
+      {
+        "url": "http://emailrep.io"
+      }
+    ],
+    "components": {
+      "securitySchemes": {
+        "Key": {
+          "type": "apiKey",
+          "name": "Key",
+          "in": "header"
+        }
+      },
+      "schemas": {
+        "body": {
+          "type": "object",
+          "required": [
+            "email",
+            "tags"
+          ],
+          "properties": {
+            "email": {
+              "type": "string",
+              "example": "test@example.com",
+              "description": "Email address being reported."
+            },
+            "tags": {
+              "type": "array",
+              "example": [
+                "malicious",
+                "romance_scam"
+              ],
+              "description": "Tags that should be applied. See detailed descriptions below for more information.\n\n* `account_takeover` - Legitimate email has been taken over by a malicious actor\n* `bec` - Business email compromise, whaling, contact impersonation/display name spoofing\n* `brand_impersonation` - Impersonating a well-known brand (e.g. Paypal, Microsoft, Google, etc.)\n* `browser_exploit` - The hosted website serves an exploit\n* `credential_phishing` - Attempting to steal user credentials\n* `generic_phishing` - Generic phishing, should only be used if others don't apply or a more specific determination can't be made or would be too difficult\n* `malware` - Malicious documents and droppers. Can be direct attachments, indirect free file hosting sites or droppers from malicious websites\n* `scam` - Catch-all for scams. Sextortion, payment scams, lottery scams, investment scams, fake bank scams, etc.\n* `spam` - Unsolicited spam or spammy behavior (e.g. forum submissions, unwanted bulk email)\n* `spoofed` - Forged sender email (e.g. the envelope from is different than the header from)\n* `task_request` - Request that the recipient perform a task (e.g. gift card purchase, update payroll, send w-2s, etc.)\n* `threat_actor` - Threat actor/owner of phishing kit\n",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": {
+              "type": "string",
+              "example": "Phishing email sent to accounting dept",
+              "description": "Additional information and context."
+            },
+            "timestamp": {
+              "type": "integer",
+              "example": 1562171178,
+              "description": "When this activity occurred in UTC. Defaults to now()."
+            },
+            "expires": {
+              "type": "integer",
+              "example": 24,
+              "description": "Number of hours the email should be considered risky (`suspicious=true` and `blacklisted=true` in the `QueryResponse`). Defaults to no expiration unless account_takeover tag is specified, in which case the default is 14 days.\n \n"
+            }
+          }
+        }
+      }
+    }
+  }
+}

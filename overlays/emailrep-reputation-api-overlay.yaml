@@ -1,0 +1,84 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the EmailRep Reputation API
+  version: 1.0.0
+x-generated: '2026-08-13'
+x-method: generated
+x-source: >-
+  Enhancements derived from https://docs.sublime.security/reference/emailrep-introduction, the
+  provider's own OpenAPI at openapi/_original/emailrep-alpha-api-openapi.json (retrieved through
+  the Sublime docs MCP server), and a live probe of https://emailrep.io/bill@microsoft.com on
+  2026-08-13. Never mutate the original spec — apply this overlay instead.
+extends: openapi/emailrep-reputation-api-openapi.yml
+actions:
+  - target: $.info
+    description: Record provenance and the provider's own title for this contract.
+    update:
+      x-apievangelist-enriched: '2026-08-13'
+      x-provider-spec-title: EmailRep Alpha API
+      x-provider-spec-retrieval: >-
+        The provider publishes no downloadable OpenAPI. Their spec is registered in their ReadMe
+        docs project and is only reachable through https://docs.sublime.security/mcp.
+  - target: $.paths['/{email}'].get
+    description: >-
+      Add the User-Agent requirement, which is documented in prose only and appears in no
+      OpenAPI the provider publishes. Omitting it returns 403 before the key is even checked.
+    update:
+      x-required-headers:
+        - name: User-Agent
+          required: true
+          missing_status: 403
+          description: >-
+            Must accurately describe the consuming application. A missing user agent returns
+            HTTP 403; a generic or misleading one may be blocked.
+      x-rate-limit:
+        window: rolling-24h
+        headers:
+          - X-Rate-Limit-Daily-Remaining
+          - X-Rate-Limit-Monthly-Remaining
+        exhaustion_status: 429
+  - target: $.paths['/{email}'].get.responses
+    description: >-
+      Document the 403 the provider returns for a missing User-Agent. It is absent from both the
+      provider's spec and the refined spec, so a spec-driven agent cannot anticipate it.
+    update:
+      '403':
+        description: >-
+          Forbidden — the request carried no User-Agent header, or one that could not be
+          identified. Documented at
+          https://docs.sublime.security/reference/emailrep-introduction.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Error'
+  - target: $.paths['/{email}'].get.responses['429']
+    description: >-
+      429 is overloaded. Record the second, non-rate-limit meaning observed in production so an
+      agent does not retry forever against a condition that will never clear.
+    update:
+      x-overloaded-status:
+        - condition: quota exhausted
+          reason_example: rate limit exceeded
+          retryable: true
+        - condition: anonymous access disabled
+          reason_example: the unauthenticated API is currently disabled. please use an API key
+          retryable: false
+          observed: '2026-08-13'
+  - target: $.components.securitySchemes.ApiKeyAuth
+    description: Correct the documented-vs-deployed gap on anonymous access.
+    update:
+      x-anonymous-access:
+        documented: true
+        enforced: false
+        note: >-
+          The docs still say a key is optional. As of 2026-08-13 an anonymous request returns 429
+          with reason "the unauthenticated API is currently disabled. please use an API key".
+          Treat the key as required.
+      x-signup: https://emailrep.io/free
+  - target: $.servers
+    description: Flag that the provider's own spec offers a plaintext server.
+    update:
+      x-transport-warning: >-
+        The provider's own OpenAPI lists http://emailrep.io alongside https://emailrep.io. Never
+        use the plaintext server — the query parameter is a real person's email address, and
+        emailrep.io serves no HSTS.

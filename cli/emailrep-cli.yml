@@ -1,0 +1,45 @@
+generated: '2026-08-13'
+method: searched
+source: https://github.com/sublime-security/emailrep.io-python
+docs: https://docs.sublime.security/reference/emailrep-client-libraries
+name: emailrep
+official: true
+description: >-
+  The first-party Python package doubles as a CLI. It is the only command-line surface EmailRep
+  publishes, and it is the same distribution as the Python SDK — one install gives both.
+install:
+  - method: pip
+    command: pip3 install emailrep --upgrade
+  - method: pip (module form)
+    command: python3 -m pip install --upgrade emailrep
+package:
+  registry: pypi
+  name: emailrep
+  version: 0.0.5
+  published: '2021-01-22'
+  url: https://pypi.org/project/emailrep/
+  cross_link: packages/emailrep-packages.yml
+commands:
+  - command: emailrep setup -k <your api key>
+    group: configuration
+    description: Store the API key locally so subsequent commands are authenticated. Optional per the docs, effectively required in production.
+  - command: emailrep <email address>
+    group: reputation
+    description: Query an email address and print the reputation response.
+    backs_operation: queryEmailReputation
+  - command: emailrep --report <email> --tags "<tag,tag>" --description "<text>"
+    group: reporting
+    description: Report an email address as malicious. API key required.
+    backs_operation: reportEmail
+library_equivalent: |
+  from emailrep import EmailRep
+  emailrep = EmailRep('<your api key>')
+  emailrep.query("bill@microsoft.com")
+  emailrep.report("foo@bar.com", ["bec", "maldoc"], "Phishing email targeting CEO")
+maintenance:
+  last_release: '2021-01-22'
+  last_repo_push: '2021-01-22'
+  note: >-
+    Unchanged for five years. It predates the production change that disabled the anonymous tier,
+    so `emailrep <address>` without a stored key now returns the 429
+    "the unauthenticated API is currently disabled" body rather than a result.

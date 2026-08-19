@@ -1,3 +1,17 @@
+generated: '2026-08-13'
+method: searched
+source: https://emailrep.io/key
+plan_count: 3
+x-verified:
+  fetched: '2026-08-13'
+  url: https://emailrep.io/key
+  http_status: 200
+  quoted: >-
+    "Community — Full API response — Free, literally $0/month — 250 queries per month, up to
+    10 queries/day" / "Commercial — Full API response — $20/month billed monthly — 1000 queries
+    per month, no daily limit" / "Enterprise — For high-volume or throughput — Custom depending
+    on your needs — high-volume API available, no daily limit". Re-read verbatim from the live
+    pricing page on 2026-08-13; unchanged from the 2026-05-30 capture below.
 specification: API Commons Plans
 specificationVersion: '0.1'
 schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
