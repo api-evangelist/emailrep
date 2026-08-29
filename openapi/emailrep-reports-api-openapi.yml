@@ -1,4 +1,4 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
   title: EmailRep Reports API
   version: '1.0'
@@ -84,6 +84,40 @@ paths:
         dispatcher: FALLBACK
 components:
   schemas:
+    ReportRequest:
+      type: object
+      title: ReportRequest
+      description: Payload for reporting an email address as exhibiting malicious behavior.
+      required:
+      - email
+      - tags
+      properties:
+        email:
+          type: string
+          format: email
+          description: The email address being reported.
+          example: attacker@example.com
+        tags:
+          type: array
+          description: One or more tags classifying the malicious behavior.
+          items:
+            type: string
+          example:
+          - bec
+          - maldoc
+        description:
+          type: string
+          description: Additional information and context about the activity.
+          example: Phishing email impersonating the CEO with a malicious attachment.
+        timestamp:
+          type: integer
+          format: int64
+          description: Unix epoch seconds when the activity occurred. Defaults to now.
+          example: 1748563200
+        expires:
+          type: integer
+          description: Number of hours the reported email should be considered risky.
+          example: 168
     Error:
       type: object
       title: Error
@@ -119,40 +153,6 @@ components:
           type: string
           description: Human-readable failure reason. Present when `status` is `fail`.
           example: invalid email address
-    ReportRequest:
-      type: object
-      title: ReportRequest
-      description: Payload for reporting an email address as exhibiting malicious behavior.
-      required:
-      - email
-      - tags
-      properties:
-        email:
-          type: string
-          format: email
-          description: The email address being reported.
-          example: attacker@example.com
-        tags:
-          type: array
-          description: One or more tags classifying the malicious behavior.
-          items:
-            type: string
-          example:
-          - bec
-          - maldoc
-        description:
-          type: string
-          description: Additional information and context about the activity.
-          example: Phishing email impersonating the CEO with a malicious attachment.
-        timestamp:
-          type: integer
-          format: int64
-          description: Unix epoch seconds when the activity occurred. Defaults to now.
-          example: 1748563200
-        expires:
-          type: integer
-          description: Number of hours the reported email should be considered risky.
-          example: 168
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

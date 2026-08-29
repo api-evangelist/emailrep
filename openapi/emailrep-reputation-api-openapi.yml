@@ -1,4 +1,4 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
   title: EmailRep Reports Reputation API
   version: '1.0'
@@ -235,23 +235,6 @@ components:
           - linkedin
           - vimeo
           - angellist
-    Error:
-      type: object
-      title: Error
-      description: Error envelope returned for failed requests.
-      required:
-      - status
-      properties:
-        status:
-          type: string
-          description: Outcome of the request.
-          enum:
-          - fail
-          example: fail
-        reason:
-          type: string
-          description: Human-readable failure reason.
-          example: invalid email address
     EmailReputation:
       type: object
       title: EmailReputation
@@ -291,6 +274,23 @@ components:
           example: high reputation, seen on 8 profiles, found in 1 data breach
         details:
           $ref: '#/components/schemas/EmailReputationDetails'
+    Error:
+      type: object
+      title: Error
+      description: Error envelope returned for failed requests.
+      required:
+      - status
+      properties:
+        status:
+          type: string
+          description: Outcome of the request.
+          enum:
+          - fail
+          example: fail
+        reason:
+          type: string
+          description: Human-readable failure reason.
+          example: invalid email address
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
