@@ -59,16 +59,16 @@ x-category: Security
 x-tier: 2
 x-tier-reason: enriched-from-stub
 apis:
-- aid: emailrep:emailrep-reports-api
-  name: EmailRep Reports API
-  description: Report email addresses as malicious so the reputation graph picks up the signal.
+- aid: emailrep:emailrep-query-email-address-api
+  name: EmailRep Query email address API
+  description: The Query email address API from EmailRep — 1 operation(s) for query email address.
   humanURL: https://emailrep.io
   baseURL: https://emailrep.io
   tags:
-  - Reports
+  - Query email address
   properties:
   - type: OpenAPI
-    url: openapi/emailrep-reports-api-openapi.yml
+    url: openapi/emailrep-query-email-address-api-openapi.yml
   - type: Documentation
     url: https://docs.sublime.security/reference/emailrep-introduction
   - type: APIReference
@@ -93,16 +93,16 @@ apis:
     url: https://github.com/sublime-security/emailrep.io-python
   - type: SourceCode
     url: https://github.com/sublime-security/emailrep.io
-- aid: emailrep:emailrep-reputation-api
-  name: EmailRep Reputation API
-  description: Query email address reputation and threat-intelligence signals.
+- aid: emailrep:emailrep-report-email-address-api
+  name: EmailRep Report email address API
+  description: The Report email address API from EmailRep — 1 operation(s) for report email address.
   humanURL: https://emailrep.io
   baseURL: https://emailrep.io
   tags:
-  - Reputation
+  - Report email address
   properties:
   - type: OpenAPI
-    url: openapi/emailrep-reputation-api-openapi.yml
+    url: openapi/emailrep-report-email-address-api-openapi.yml
   - type: Documentation
     url: https://docs.sublime.security/reference/emailrep-introduction
   - type: APIReference
