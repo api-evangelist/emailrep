@@ -1,20 +1,26 @@
 {
   "provider": "emailrep",
   "sources": [
-    "emailrep-reports-api-openapi.yml",
-    "emailrep-reputation-api-openapi.yml"
+    "_original/emailrep-alpha-api-openapi.json"
   ],
   "outputs": [
-    "emailrep-reports-api-openapi.yml",
-    "emailrep-reputation-api-openapi.yml"
+    "emailrep-query-email-address-api-openapi.yml",
+    "emailrep-report-email-address-api-openapi.yml"
   ],
   "archived": [],
   "errors": [],
   "warnings": [],
   "notes": [
-    "emailrep-reports-api-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
-    "emailrep-reputation-api-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "1 archived document(s) dropped as subsets of other archived documents",
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "emailrep-alpha-api-openapi.json: upgraded openapi 3.0.0 -> OpenAPI 3.2.0",
+    "emailrep-alpha-api-openapi.json: declared missing tag: Query email address",
+    "emailrep-alpha-api-openapi.json: declared missing tag: Report email address",
     "apis.yml register: already-registered"
   ],
-  "skipped": []
+  "skipped": [
+    "_ae-authored/emailrep-api-openapi.yml: archived document superseded by a larger archived document",
+    "emailrep-query-email-address-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "emailrep-report-email-address-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

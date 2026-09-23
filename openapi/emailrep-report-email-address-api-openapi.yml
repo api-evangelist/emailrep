@@ -1,0 +1,105 @@
+openapi: 3.2.0
+info:
+  title: EmailRep Alpha Report email address API
+  version: 1.0.0
+  description: 'EmailRep is a system of crawlers, scanners and enrichment services that collects data on email addresses, domains, and internet personas.
+
+
+    EmailRep uses hundreds of data points from social media profiles, professional networking sites, dark web credential leaks, data breaches, phishing kits, phishing emails, spam lists, open mail relays, domain age and reputation, deliverability, and more to predict the risk of an email address.
+
+
+    Operated by Sublime Security'
+servers:
+- url: https://emailrep.io
+- url: http://emailrep.io
+tags:
+- name: Report email address
+paths:
+  /report:
+    post:
+      tags:
+      - Report email address
+      summary: Report an email address
+      description: Reports an email address. Date of malicious activity defaults to the current time unless otherwise specified.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/body'
+        description: Report content.
+        required: true
+      security:
+      - Key: []
+      responses:
+        '200':
+          description: Report successful
+        '400':
+          description: Invalid input
+        '401':
+          description: Invalid api key
+      operationId: postReport
+      x-operation-id-source: derived
+components:
+  schemas:
+    body:
+      type: object
+      required:
+      - email
+      - tags
+      properties:
+        email:
+          type: string
+          example: test@example.com
+          description: Email address being reported.
+        tags:
+          type: array
+          example:
+          - malicious
+          - romance_scam
+          description: 'Tags that should be applied. See detailed descriptions below for more information.
+
+
+            * `account_takeover` - Legitimate email has been taken over by a malicious actor
+
+            * `bec` - Business email compromise, whaling, contact impersonation/display name spoofing
+
+            * `brand_impersonation` - Impersonating a well-known brand (e.g. Paypal, Microsoft, Google, etc.)
+
+            * `browser_exploit` - The hosted website serves an exploit
+
+            * `credential_phishing` - Attempting to steal user credentials
+
+            * `generic_phishing` - Generic phishing, should only be used if others don''t apply or a more specific determination can''t be made or would be too difficult
+
+            * `malware` - Malicious documents and droppers. Can be direct attachments, indirect free file hosting sites or droppers from malicious websites
+
+            * `scam` - Catch-all for scams. Sextortion, payment scams, lottery scams, investment scams, fake bank scams, etc.
+
+            * `spam` - Unsolicited spam or spammy behavior (e.g. forum submissions, unwanted bulk email)
+
+            * `spoofed` - Forged sender email (e.g. the envelope from is different than the header from)
+
+            * `task_request` - Request that the recipient perform a task (e.g. gift card purchase, update payroll, send w-2s, etc.)
+
+            * `threat_actor` - Threat actor/owner of phishing kit
+
+            '
+          items:
+            type: string
+        description:
+          type: string
+          example: Phishing email sent to accounting dept
+          description: Additional information and context.
+        timestamp:
+          type: integer
+          example: 1562171178
+          description: When this activity occurred in UTC. Defaults to now().
+        expires:
+          type: integer
+          example: 24
+          description: "Number of hours the email should be considered risky (`suspicious=true` and `blacklisted=true` in the `QueryResponse`). Defaults to no expiration unless account_takeover tag is specified, in which case the default is 14 days.\n \n"
+  securitySchemes:
+    Key:
+      type: apiKey
+      name: Key
+      in: header
