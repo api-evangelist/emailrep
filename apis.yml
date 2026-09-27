@@ -11,17 +11,20 @@ description: >-
   graph.
 type: Index
 deliveryModel:
-  model: unknown
+  model: saas
+  license_evidence:
+    not_product:
+    - sublime-security/emailrep.io
   open_source: unknown
   commercial: true
   callable_host: true
-  label: Delivery model not determined — needs a product licence on record
+  label: Hosted service · you call their endpoint
   confidence: low
   source:
   - openapi
   - pricing
-  - repository-unlicensed
-  generated: '2026-08-28'
+  - repository-not-product
+  generated: '2026-09-25'
   method: derived
 accessModel:
   pricing: freemium
@@ -63,7 +66,6 @@ apis:
   name: EmailRep Query email address API
   description: The Query email address API from EmailRep — 1 operation(s) for query email address.
   humanURL: https://emailrep.io
-  baseURL: https://emailrep.io
   tags:
   - Query email address
   properties:
@@ -97,7 +99,6 @@ apis:
   name: EmailRep Report email address API
   description: The Report email address API from EmailRep — 1 operation(s) for report email address.
   humanURL: https://emailrep.io
-  baseURL: https://emailrep.io
   tags:
   - Report email address
   properties:
