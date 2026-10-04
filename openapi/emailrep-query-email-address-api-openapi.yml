@@ -50,6 +50,27 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    QueryResponse:
+      type: object
+      properties:
+        email:
+          type: string
+          example: bill@microsoft.com
+          description: email address queried
+        reputation:
+          type: string
+          example: high
+          description: high/medium/low/none
+        suspicious:
+          type: boolean
+          example: false
+          description: whether the email address should be treated as suspicious or risky
+        references:
+          type: integer
+          example: 59
+          description: total number of positive and negative sources of reputation. note that these may not all be direct references to the email address, but can include reputation sources for the domain or other related information
+        details:
+          $ref: '#/components/schemas/QueryResponse_details'
     QueryResponse_details:
       type: object
       properties:
@@ -156,27 +177,6 @@ components:
           description: online profiles used by the email
           items:
             type: string
-    QueryResponse:
-      type: object
-      properties:
-        email:
-          type: string
-          example: bill@microsoft.com
-          description: email address queried
-        reputation:
-          type: string
-          example: high
-          description: high/medium/low/none
-        suspicious:
-          type: boolean
-          example: false
-          description: whether the email address should be treated as suspicious or risky
-        references:
-          type: integer
-          example: 59
-          description: total number of positive and negative sources of reputation. note that these may not all be direct references to the email address, but can include reputation sources for the domain or other related information
-        details:
-          $ref: '#/components/schemas/QueryResponse_details'
   securitySchemes:
     Key:
       type: apiKey
