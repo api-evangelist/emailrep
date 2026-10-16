@@ -2,6 +2,13 @@
   "repo": "emailrep",
   "feeds": [
     {
+      "source": "https://blog.sublimesecurity.com",
+      "feed_url": "https://blog.sublimesecurity.com/feed/",
+      "title": "",
+      "saved": 0,
+      "method": "discovered"
+    },
+    {
       "source": "https://sublimesecurity.com/privacy",
       "feed_url": "https://sublimesecurity.com/privacy",
       "title": "",
@@ -9,6 +16,6 @@
       "method": "none"
     }
   ],
-  "fetched": "2026-10-03T12:30:02Z",
+  "fetched": "2026-10-10T13:15:00Z",
   "post_count": 0
 }
