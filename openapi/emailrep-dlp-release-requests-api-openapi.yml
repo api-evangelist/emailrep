@@ -1,0 +1,266 @@
+openapi: 3.2.0
+info:
+  title: Sublime Platform DLP release requests API
+  version: generated
+servers:
+- url: '{scheme}://{server}'
+  variables:
+    scheme:
+      default: https
+      enum:
+      - http
+      - https
+    server:
+      default: platform.sublime.security
+      description: Base URL of your Sublime deployment
+security:
+- bearerAuth: []
+tags:
+- name: DLP release requests
+paths:
+  /v0/dlp/release-requests:
+    get:
+      description: Returns release requests, oldest request first, with the blocked message's sender, subject, and recipients. Defaults to those awaiting review; pass status to widen, or canonical_id to scope to one message group.
+      operationId: v0ListDLPReleaseRequests
+      parameters:
+      - description: Only return requests whose blocked message belongs to this canonical group.
+        in: query
+        name: canonical_id
+        schema:
+          description: Only return requests whose blocked message belongs to this canonical group.
+          type: string
+      - description: Maximum number of requests to return.
+        in: query
+        name: limit
+        schema:
+          default: 50
+          description: Maximum number of requests to return.
+          format: int32
+          maximum: 500
+          minimum: 1
+          type: integer
+      - description: Zero-based offset of requests to return.
+        in: query
+        name: offset
+        schema:
+          default: 0
+          description: Zero-based offset of requests to return.
+          format: int32
+          type: integer
+      - description: Only return requests created at or after this RFC3339 timestamp.
+        in: query
+        name: requested_at__gte
+        schema:
+          description: Only return requests created at or after this RFC3339 timestamp.
+          format: date-time
+          type:
+          - string
+          - 'null'
+      - description: Statuses to return. Repeatable. Defaults to NEW, the requests still awaiting review.
+        explode: true
+        in: query
+        name: status
+        schema:
+          description: Statuses to return. Repeatable. Defaults to NEW, the requests still awaiting review.
+          items:
+            enum:
+            - NEW
+            - APPROVED
+            - DENIED
+            type: string
+          type: array
+        style: form
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Handler_typesListDLPReleaseRequestsResponse'
+          description: OK
+      summary: List DLP release requests
+      tags:
+      - DLP release requests
+  /v0/dlp/release-requests/{id}:
+    get:
+      description: Returns one release request, so a caller can refetch it after an approve or deny instead of re-listing.
+      operationId: v0GetDLPReleaseRequest
+      parameters:
+      - description: Release request ID
+        in: path
+        name: id
+        required: true
+        schema:
+          description: Release request ID
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Handler_typesDLPReleaseRequestItem'
+          description: OK
+      summary: Get a DLP release request
+      tags:
+      - DLP release requests
+  /v0/dlp/release-requests/{id}/approve:
+    post:
+      description: Releases the blocked message for delivery and emails the sender. Refused once the request's notification has expired.
+      operationId: v0ApproveDLPReleaseRequest
+      parameters:
+      - description: Release request ID
+        in: path
+        name: id
+        required: true
+        schema:
+          description: Release request ID
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Handler_typesReviewDLPReleaseRequestResponse'
+          description: OK
+      summary: Approve a DLP release request
+      tags:
+      - DLP release requests
+  /v0/dlp/release-requests/{id}/deny:
+    post:
+      description: Declines the request, leaving the message blocked, and emails the sender.
+      operationId: v0DenyDLPReleaseRequest
+      parameters:
+      - description: Release request ID
+        in: path
+        name: id
+        required: true
+        schema:
+          description: Release request ID
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Handler_typesReviewDLPReleaseRequestResponse'
+          description: OK
+      summary: Deny a DLP release request
+      tags:
+      - DLP release requests
+components:
+  schemas:
+    Handler_typesReviewDLPReleaseRequestResponse:
+      properties:
+        already_reviewed:
+          description: True when the decision had already been recorded. Repeating the same decision may retry incomplete side effects but cannot change the recorded outcome.
+          type: boolean
+        id:
+          description: Release request ID
+          type: string
+        reviewed_at:
+          description: When the request was reviewed, or null if pending or unavailable
+          format: date-time
+          type:
+          - string
+          - 'null'
+        status:
+          description: Last known request status, or null if unavailable
+          type:
+          - string
+          - 'null'
+      type: object
+    Handler_typesDLPReleaseRequestItem:
+      properties:
+        asa_verdict:
+          description: DLP verdict given by ASA for the blocked message group, normalized to Violation, Benign, or Unknown regardless of stored casing; null while analysis is incomplete
+          type:
+          - string
+          - 'null'
+        canonical_id:
+          description: Canonical group of the blocked message, for linking to the message detail view
+          type: string
+        envelope_recipients:
+          description: 'Who actually receives the message if this request is approved: the SMTP envelope recipients of the messages it would release, Bcc included. Review against this rather than ''recipients''.'
+          items:
+            type: string
+          type: array
+        expired:
+          description: Whether the request can no longer be approved because its notification has expired
+          type: boolean
+        expires_at:
+          description: When the unblock link stops being actionable. Approval is refused past this point.
+          format: date-time
+          type: string
+        id:
+          description: Release request ID
+          type: string
+        message_count:
+          description: Number of message rows in the blocked message's logical send, regardless of delivery state
+          format: int32
+          type: integer
+        message_subject:
+          description: Subject of the blocked message
+          type:
+          - string
+          - 'null'
+        notification_id:
+          description: ID of the DLP block notification this request was made against
+          type: string
+        notification_sent_at:
+          description: When the block notification email was sent to the sender, or null if it has not been sent
+          format: date-time
+          type:
+          - string
+          - 'null'
+        reason:
+          description: The sender's free-text justification for requesting release, or null if they didn't give one
+          type:
+          - string
+          - 'null'
+        recipients:
+          description: Recipients the sender addressed the blocked message to, from its To and Cc headers. Bcc is not included, so this is not the set that receives the message on release.
+          items:
+            type: string
+          type: array
+        requested_at:
+          description: When the sender requested release
+          format: date-time
+          type: string
+        reviewed_at:
+          description: When an admin approved or denied the request, or null while it is still awaiting review
+          format: date-time
+          type:
+          - string
+          - 'null'
+        sender_address:
+          description: Email address of the sender whose message was blocked
+          type: string
+        status:
+          description: Current status of the request
+          enum:
+          - NEW
+          - APPROVED
+          - DENIED
+          type: string
+      type: object
+    Handler_typesListDLPReleaseRequestsResponse:
+      properties:
+        count:
+          description: Number of requests on this page
+          format: int32
+          type: integer
+        results:
+          description: Matching release requests, oldest request first
+          items:
+            $ref: '#/components/schemas/Handler_typesDLPReleaseRequestItem'
+          type: array
+        total:
+          description: Total number of requests matching the filters, across all pages
+          format: int32
+          type: integer
+      type: object
+  securitySchemes:
+    bearerAuth:
+      scheme: bearer
+      type: http
+x-readme:
+  explorer-enabled: false

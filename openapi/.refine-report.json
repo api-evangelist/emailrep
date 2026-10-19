@@ -1,26 +1,38 @@
 {
   "provider": "emailrep",
   "sources": [
-    "_original/emailrep-alpha-api-openapi.json"
+    "_original/emailrep-openapi.json",
+    "_ae-authored/emailrep-api-openapi.yml"
   ],
   "outputs": [
-    "emailrep-query-email-address-api-openapi.yml",
-    "emailrep-report-email-address-api-openapi.yml"
+    "emailrep-binexplode-api-openapi.yml",
+    "emailrep-dlp-release-requests-api-openapi.yml",
+    "emailrep-email-bombs-api-openapi.yml",
+    "emailrep-enrichment-api-openapi.yml",
+    "emailrep-events-in-the-audit-log-api-openapi.yml",
+    "emailrep-export-api-openapi.yml",
+    "emailrep-hunt-jobs-api-openapi.yml",
+    "emailrep-lists-api-openapi.yml",
+    "emailrep-live-flow-api-openapi.yml",
+    "emailrep-mailboxes-api-openapi.yml",
+    "emailrep-message-groups-api-openapi.yml",
+    "emailrep-messages-api-openapi.yml",
+    "emailrep-roles-api-openapi.yml",
+    "emailrep-rules-api-openapi.yml",
+    "emailrep-scim-api-openapi.yml",
+    "emailrep-tasks-api-openapi.yml",
+    "emailrep-user-reports-api-openapi.yml",
+    "emailrep-reports-api-openapi.yml",
+    "emailrep-reputation-api-openapi.yml"
   ],
   "archived": [],
   "errors": [],
   "warnings": [],
   "notes": [
-    "1 archived document(s) dropped as subsets of other archived documents",
     "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
-    "emailrep-alpha-api-openapi.json: upgraded openapi 3.0.0 -> OpenAPI 3.2.0",
-    "emailrep-alpha-api-openapi.json: declared missing tag: Query email address",
-    "emailrep-alpha-api-openapi.json: declared missing tag: Report email address",
-    "apis.yml register: already-registered"
+    "emailrep-openapi.json: upgraded openapi 3.0.1 -> OpenAPI 3.2.0",
+    "emailrep-api-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "apis.yml register: written (+19 apis, 19 total)"
   ],
-  "skipped": [
-    "_ae-authored/emailrep-api-openapi.yml: archived document superseded by a larger archived document",
-    "emailrep-query-email-address-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "emailrep-report-email-address-api-openapi.yml: previously refined output, superseded by openapi/_original/"
-  ]
+  "skipped": []
 }

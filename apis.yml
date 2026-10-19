@@ -65,15 +65,15 @@ x-category: Security
 x-tier: 2
 x-tier-reason: enriched-from-stub
 apis:
-- aid: emailrep:emailrep-query-email-address-api
-  name: EmailRep Query email address API
-  description: The Query email address API from EmailRep — 1 operation(s) for query email address.
+- aid: emailrep:emailrep-binexplode-api
+  name: EmailRep Bin Explode API
+  description: The BinExplode API from EmailRep — 2 operation(s) for binexplode.
   humanURL: https://emailrep.io
   tags:
-  - Query email address
+  - BinExplode
   properties:
   - type: OpenAPI
-    url: openapi/emailrep-query-email-address-api-openapi.yml
+    url: openapi/emailrep-binexplode-api-openapi.yml
   - type: Documentation
     url: https://docs.sublime.security/reference/emailrep-introduction
   - type: APIReference
@@ -98,15 +98,577 @@ apis:
     url: https://github.com/sublime-security/emailrep.io-python
   - type: SourceCode
     url: https://github.com/sublime-security/emailrep.io
-- aid: emailrep:emailrep-report-email-address-api
-  name: EmailRep Report email address API
-  description: The Report email address API from EmailRep — 1 operation(s) for report email address.
+- aid: emailrep:emailrep-dlp-release-requests-api
+  name: EmailRep DLP release requests API
+  description: The DLP release requests API from EmailRep — 4 operation(s) for dlp release requests.
   humanURL: https://emailrep.io
   tags:
-  - Report email address
+  - DLP release requests
   properties:
   - type: OpenAPI
-    url: openapi/emailrep-report-email-address-api-openapi.yml
+    url: openapi/emailrep-dlp-release-requests-api-openapi.yml
+  - type: Documentation
+    url: https://docs.sublime.security/reference/emailrep-introduction
+  - type: APIReference
+    url: https://docs.sublime.security/reference/emailrep-introduction
+  - type: GettingStarted
+    url: https://github.com/sublime-security/emailrep.io#simple-usage
+  - type: SDKs
+    url: https://github.com/sublime-security/emailrep.io-python
+  - type: SDKs
+    url: https://pypi.org/project/emailrep/
+  - type: SDKs
+    url: https://github.com/arnydo/PSEmailRep
+  - type: SDKs
+    url: https://git.rud.is/hrbrmstr/emailrep
+  - type: SDKs
+    url: https://github.com/WestDiscGolf/EmailRep.NET
+  - type: SDKs
+    url: https://github.com/kaiiyer/emailrep
+  - type: SDKs
+    url: https://github.com/vertoforce/go-emailrep
+  - type: CLI
+    url: https://github.com/sublime-security/emailrep.io-python
+  - type: SourceCode
+    url: https://github.com/sublime-security/emailrep.io
+- aid: emailrep:emailrep-email-bombs-api
+  name: EmailRep Email Bombs API
+  description: The Email Bombs API from EmailRep — 3 operation(s) for email bombs.
+  humanURL: https://emailrep.io
+  tags:
+  - Email Bombs
+  properties:
+  - type: OpenAPI
+    url: openapi/emailrep-email-bombs-api-openapi.yml
+  - type: Documentation
+    url: https://docs.sublime.security/reference/emailrep-introduction
+  - type: APIReference
+    url: https://docs.sublime.security/reference/emailrep-introduction
+  - type: GettingStarted
+    url: https://github.com/sublime-security/emailrep.io#simple-usage
+  - type: SDKs
+    url: https://github.com/sublime-security/emailrep.io-python
+  - type: SDKs
+    url: https://pypi.org/project/emailrep/
+  - type: SDKs
+    url: https://github.com/arnydo/PSEmailRep
+  - type: SDKs
+    url: https://git.rud.is/hrbrmstr/emailrep
+  - type: SDKs
+    url: https://github.com/WestDiscGolf/EmailRep.NET
+  - type: SDKs
+    url: https://github.com/kaiiyer/emailrep
+  - type: SDKs
+    url: https://github.com/vertoforce/go-emailrep
+  - type: CLI
+    url: https://github.com/sublime-security/emailrep.io-python
+  - type: SourceCode
+    url: https://github.com/sublime-security/emailrep.io
+- aid: emailrep:emailrep-enrichment-api
+  name: EmailRep Enrichment API
+  description: The Enrichment API from EmailRep — 1 operation(s) for enrichment.
+  humanURL: https://emailrep.io
+  tags:
+  - Enrichment
+  properties:
+  - type: OpenAPI
+    url: openapi/emailrep-enrichment-api-openapi.yml
+  - type: Documentation
+    url: https://docs.sublime.security/reference/emailrep-introduction
+  - type: APIReference
+    url: https://docs.sublime.security/reference/emailrep-introduction
+  - type: GettingStarted
+    url: https://github.com/sublime-security/emailrep.io#simple-usage
+  - type: SDKs
+    url: https://github.com/sublime-security/emailrep.io-python
+  - type: SDKs
+    url: https://pypi.org/project/emailrep/
+  - type: SDKs
+    url: https://github.com/arnydo/PSEmailRep
+  - type: SDKs
+    url: https://git.rud.is/hrbrmstr/emailrep
+  - type: SDKs
+    url: https://github.com/WestDiscGolf/EmailRep.NET
+  - type: SDKs
+    url: https://github.com/kaiiyer/emailrep
+  - type: SDKs
+    url: https://github.com/vertoforce/go-emailrep
+  - type: CLI
+    url: https://github.com/sublime-security/emailrep.io-python
+  - type: SourceCode
+    url: https://github.com/sublime-security/emailrep.io
+- aid: emailrep:emailrep-events-in-the-audit-log-api
+  name: EmailRep Events in the audit log API
+  description: >-
+    The Events in the audit log API from EmailRep — 3 operation(s) for events in the audit log.
+  humanURL: https://emailrep.io
+  tags:
+  - Events in the audit log
+  properties:
+  - type: OpenAPI
+    url: openapi/emailrep-events-in-the-audit-log-api-openapi.yml
+  - type: Documentation
+    url: https://docs.sublime.security/reference/emailrep-introduction
+  - type: APIReference
+    url: https://docs.sublime.security/reference/emailrep-introduction
+  - type: GettingStarted
+    url: https://github.com/sublime-security/emailrep.io#simple-usage
+  - type: SDKs
+    url: https://github.com/sublime-security/emailrep.io-python
+  - type: SDKs
+    url: https://pypi.org/project/emailrep/
+  - type: SDKs
+    url: https://github.com/arnydo/PSEmailRep
+  - type: SDKs
+    url: https://git.rud.is/hrbrmstr/emailrep
+  - type: SDKs
+    url: https://github.com/WestDiscGolf/EmailRep.NET
+  - type: SDKs
+    url: https://github.com/kaiiyer/emailrep
+  - type: SDKs
+    url: https://github.com/vertoforce/go-emailrep
+  - type: CLI
+    url: https://github.com/sublime-security/emailrep.io-python
+  - type: SourceCode
+    url: https://github.com/sublime-security/emailrep.io
+- aid: emailrep:emailrep-export-api
+  name: EmailRep Export API
+  description: The Export API from EmailRep — 4 operation(s) for export.
+  humanURL: https://emailrep.io
+  tags:
+  - Export
+  properties:
+  - type: OpenAPI
+    url: openapi/emailrep-export-api-openapi.yml
+  - type: Documentation
+    url: https://docs.sublime.security/reference/emailrep-introduction
+  - type: APIReference
+    url: https://docs.sublime.security/reference/emailrep-introduction
+  - type: GettingStarted
+    url: https://github.com/sublime-security/emailrep.io#simple-usage
+  - type: SDKs
+    url: https://github.com/sublime-security/emailrep.io-python
+  - type: SDKs
+    url: https://pypi.org/project/emailrep/
+  - type: SDKs
+    url: https://github.com/arnydo/PSEmailRep
+  - type: SDKs
+    url: https://git.rud.is/hrbrmstr/emailrep
+  - type: SDKs
+    url: https://github.com/WestDiscGolf/EmailRep.NET
+  - type: SDKs
+    url: https://github.com/kaiiyer/emailrep
+  - type: SDKs
+    url: https://github.com/vertoforce/go-emailrep
+  - type: CLI
+    url: https://github.com/sublime-security/emailrep.io-python
+  - type: SourceCode
+    url: https://github.com/sublime-security/emailrep.io
+- aid: emailrep:emailrep-hunt-jobs-api
+  name: EmailRep Hunt Jobs API
+  description: The Hunt Jobs API from EmailRep — 3 operation(s) for hunt jobs.
+  humanURL: https://emailrep.io
+  tags:
+  - Hunt Jobs
+  properties:
+  - type: OpenAPI
+    url: openapi/emailrep-hunt-jobs-api-openapi.yml
+  - type: Documentation
+    url: https://docs.sublime.security/reference/emailrep-introduction
+  - type: APIReference
+    url: https://docs.sublime.security/reference/emailrep-introduction
+  - type: GettingStarted
+    url: https://github.com/sublime-security/emailrep.io#simple-usage
+  - type: SDKs
+    url: https://github.com/sublime-security/emailrep.io-python
+  - type: SDKs
+    url: https://pypi.org/project/emailrep/
+  - type: SDKs
+    url: https://github.com/arnydo/PSEmailRep
+  - type: SDKs
+    url: https://git.rud.is/hrbrmstr/emailrep
+  - type: SDKs
+    url: https://github.com/WestDiscGolf/EmailRep.NET
+  - type: SDKs
+    url: https://github.com/kaiiyer/emailrep
+  - type: SDKs
+    url: https://github.com/vertoforce/go-emailrep
+  - type: CLI
+    url: https://github.com/sublime-security/emailrep.io-python
+  - type: SourceCode
+    url: https://github.com/sublime-security/emailrep.io
+- aid: emailrep:emailrep-lists-api
+  name: EmailRep Lists API
+  description: The Lists API from EmailRep — 4 operation(s) for lists.
+  humanURL: https://emailrep.io
+  tags:
+  - Lists
+  properties:
+  - type: OpenAPI
+    url: openapi/emailrep-lists-api-openapi.yml
+  - type: Documentation
+    url: https://docs.sublime.security/reference/emailrep-introduction
+  - type: APIReference
+    url: https://docs.sublime.security/reference/emailrep-introduction
+  - type: GettingStarted
+    url: https://github.com/sublime-security/emailrep.io#simple-usage
+  - type: SDKs
+    url: https://github.com/sublime-security/emailrep.io-python
+  - type: SDKs
+    url: https://pypi.org/project/emailrep/
+  - type: SDKs
+    url: https://github.com/arnydo/PSEmailRep
+  - type: SDKs
+    url: https://git.rud.is/hrbrmstr/emailrep
+  - type: SDKs
+    url: https://github.com/WestDiscGolf/EmailRep.NET
+  - type: SDKs
+    url: https://github.com/kaiiyer/emailrep
+  - type: SDKs
+    url: https://github.com/vertoforce/go-emailrep
+  - type: CLI
+    url: https://github.com/sublime-security/emailrep.io-python
+  - type: SourceCode
+    url: https://github.com/sublime-security/emailrep.io
+- aid: emailrep:emailrep-live-flow-api
+  name: EmailRep Live flow API
+  description: The Live flow API from EmailRep — 1 operation(s) for live flow.
+  humanURL: https://emailrep.io
+  tags:
+  - Live flow
+  properties:
+  - type: OpenAPI
+    url: openapi/emailrep-live-flow-api-openapi.yml
+  - type: Documentation
+    url: https://docs.sublime.security/reference/emailrep-introduction
+  - type: APIReference
+    url: https://docs.sublime.security/reference/emailrep-introduction
+  - type: GettingStarted
+    url: https://github.com/sublime-security/emailrep.io#simple-usage
+  - type: SDKs
+    url: https://github.com/sublime-security/emailrep.io-python
+  - type: SDKs
+    url: https://pypi.org/project/emailrep/
+  - type: SDKs
+    url: https://github.com/arnydo/PSEmailRep
+  - type: SDKs
+    url: https://git.rud.is/hrbrmstr/emailrep
+  - type: SDKs
+    url: https://github.com/WestDiscGolf/EmailRep.NET
+  - type: SDKs
+    url: https://github.com/kaiiyer/emailrep
+  - type: SDKs
+    url: https://github.com/vertoforce/go-emailrep
+  - type: CLI
+    url: https://github.com/sublime-security/emailrep.io-python
+  - type: SourceCode
+    url: https://github.com/sublime-security/emailrep.io
+- aid: emailrep:emailrep-mailboxes-api
+  name: EmailRep Mailboxes API
+  description: The Mailboxes API from EmailRep — 1 operation(s) for mailboxes.
+  humanURL: https://emailrep.io
+  tags:
+  - Mailboxes
+  properties:
+  - type: OpenAPI
+    url: openapi/emailrep-mailboxes-api-openapi.yml
+  - type: Documentation
+    url: https://docs.sublime.security/reference/emailrep-introduction
+  - type: APIReference
+    url: https://docs.sublime.security/reference/emailrep-introduction
+  - type: GettingStarted
+    url: https://github.com/sublime-security/emailrep.io#simple-usage
+  - type: SDKs
+    url: https://github.com/sublime-security/emailrep.io-python
+  - type: SDKs
+    url: https://pypi.org/project/emailrep/
+  - type: SDKs
+    url: https://github.com/arnydo/PSEmailRep
+  - type: SDKs
+    url: https://git.rud.is/hrbrmstr/emailrep
+  - type: SDKs
+    url: https://github.com/WestDiscGolf/EmailRep.NET
+  - type: SDKs
+    url: https://github.com/kaiiyer/emailrep
+  - type: SDKs
+    url: https://github.com/vertoforce/go-emailrep
+  - type: CLI
+    url: https://github.com/sublime-security/emailrep.io-python
+  - type: SourceCode
+    url: https://github.com/sublime-security/emailrep.io
+- aid: emailrep:emailrep-message-groups-api
+  name: EmailRep Message Groups API
+  description: The Message Groups API from EmailRep — 18 operation(s) for message groups.
+  humanURL: https://emailrep.io
+  tags:
+  - Message Groups
+  properties:
+  - type: OpenAPI
+    url: openapi/emailrep-message-groups-api-openapi.yml
+  - type: Documentation
+    url: https://docs.sublime.security/reference/emailrep-introduction
+  - type: APIReference
+    url: https://docs.sublime.security/reference/emailrep-introduction
+  - type: GettingStarted
+    url: https://github.com/sublime-security/emailrep.io#simple-usage
+  - type: SDKs
+    url: https://github.com/sublime-security/emailrep.io-python
+  - type: SDKs
+    url: https://pypi.org/project/emailrep/
+  - type: SDKs
+    url: https://github.com/arnydo/PSEmailRep
+  - type: SDKs
+    url: https://git.rud.is/hrbrmstr/emailrep
+  - type: SDKs
+    url: https://github.com/WestDiscGolf/EmailRep.NET
+  - type: SDKs
+    url: https://github.com/kaiiyer/emailrep
+  - type: SDKs
+    url: https://github.com/vertoforce/go-emailrep
+  - type: CLI
+    url: https://github.com/sublime-security/emailrep.io-python
+  - type: SourceCode
+    url: https://github.com/sublime-security/emailrep.io
+- aid: emailrep:emailrep-messages-api
+  name: EmailRep Messages API
+  description: The Messages API from EmailRep — 19 operation(s) for messages.
+  humanURL: https://emailrep.io
+  tags:
+  - Messages
+  properties:
+  - type: OpenAPI
+    url: openapi/emailrep-messages-api-openapi.yml
+  - type: Documentation
+    url: https://docs.sublime.security/reference/emailrep-introduction
+  - type: APIReference
+    url: https://docs.sublime.security/reference/emailrep-introduction
+  - type: GettingStarted
+    url: https://github.com/sublime-security/emailrep.io#simple-usage
+  - type: SDKs
+    url: https://github.com/sublime-security/emailrep.io-python
+  - type: SDKs
+    url: https://pypi.org/project/emailrep/
+  - type: SDKs
+    url: https://github.com/arnydo/PSEmailRep
+  - type: SDKs
+    url: https://git.rud.is/hrbrmstr/emailrep
+  - type: SDKs
+    url: https://github.com/WestDiscGolf/EmailRep.NET
+  - type: SDKs
+    url: https://github.com/kaiiyer/emailrep
+  - type: SDKs
+    url: https://github.com/vertoforce/go-emailrep
+  - type: CLI
+    url: https://github.com/sublime-security/emailrep.io-python
+  - type: SourceCode
+    url: https://github.com/sublime-security/emailrep.io
+- aid: emailrep:emailrep-reports-api
+  name: EmailRep Reports API
+  description: Report email addresses as malicious so the reputation graph picks up the signal.
+  humanURL: https://emailrep.io
+  tags:
+  - Reports
+  properties:
+  - type: OpenAPI
+    url: openapi/emailrep-reports-api-openapi.yml
+  - type: Documentation
+    url: https://docs.sublime.security/reference/emailrep-introduction
+  - type: APIReference
+    url: https://docs.sublime.security/reference/emailrep-introduction
+  - type: GettingStarted
+    url: https://github.com/sublime-security/emailrep.io#simple-usage
+  - type: SDKs
+    url: https://github.com/sublime-security/emailrep.io-python
+  - type: SDKs
+    url: https://pypi.org/project/emailrep/
+  - type: SDKs
+    url: https://github.com/arnydo/PSEmailRep
+  - type: SDKs
+    url: https://git.rud.is/hrbrmstr/emailrep
+  - type: SDKs
+    url: https://github.com/WestDiscGolf/EmailRep.NET
+  - type: SDKs
+    url: https://github.com/kaiiyer/emailrep
+  - type: SDKs
+    url: https://github.com/vertoforce/go-emailrep
+  - type: CLI
+    url: https://github.com/sublime-security/emailrep.io-python
+  - type: SourceCode
+    url: https://github.com/sublime-security/emailrep.io
+- aid: emailrep:emailrep-reputation-api
+  name: EmailRep Reputation API
+  description: Query email address reputation and threat-intelligence signals.
+  humanURL: https://emailrep.io
+  tags:
+  - Reputation
+  properties:
+  - type: OpenAPI
+    url: openapi/emailrep-reputation-api-openapi.yml
+  - type: Documentation
+    url: https://docs.sublime.security/reference/emailrep-introduction
+  - type: APIReference
+    url: https://docs.sublime.security/reference/emailrep-introduction
+  - type: GettingStarted
+    url: https://github.com/sublime-security/emailrep.io#simple-usage
+  - type: SDKs
+    url: https://github.com/sublime-security/emailrep.io-python
+  - type: SDKs
+    url: https://pypi.org/project/emailrep/
+  - type: SDKs
+    url: https://github.com/arnydo/PSEmailRep
+  - type: SDKs
+    url: https://git.rud.is/hrbrmstr/emailrep
+  - type: SDKs
+    url: https://github.com/WestDiscGolf/EmailRep.NET
+  - type: SDKs
+    url: https://github.com/kaiiyer/emailrep
+  - type: SDKs
+    url: https://github.com/vertoforce/go-emailrep
+  - type: CLI
+    url: https://github.com/sublime-security/emailrep.io-python
+  - type: SourceCode
+    url: https://github.com/sublime-security/emailrep.io
+- aid: emailrep:emailrep-roles-api
+  name: EmailRep Roles API
+  description: The Roles API from EmailRep — 1 operation(s) for roles.
+  humanURL: https://emailrep.io
+  tags:
+  - Roles
+  properties:
+  - type: OpenAPI
+    url: openapi/emailrep-roles-api-openapi.yml
+  - type: Documentation
+    url: https://docs.sublime.security/reference/emailrep-introduction
+  - type: APIReference
+    url: https://docs.sublime.security/reference/emailrep-introduction
+  - type: GettingStarted
+    url: https://github.com/sublime-security/emailrep.io#simple-usage
+  - type: SDKs
+    url: https://github.com/sublime-security/emailrep.io-python
+  - type: SDKs
+    url: https://pypi.org/project/emailrep/
+  - type: SDKs
+    url: https://github.com/arnydo/PSEmailRep
+  - type: SDKs
+    url: https://git.rud.is/hrbrmstr/emailrep
+  - type: SDKs
+    url: https://github.com/WestDiscGolf/EmailRep.NET
+  - type: SDKs
+    url: https://github.com/kaiiyer/emailrep
+  - type: SDKs
+    url: https://github.com/vertoforce/go-emailrep
+  - type: CLI
+    url: https://github.com/sublime-security/emailrep.io-python
+  - type: SourceCode
+    url: https://github.com/sublime-security/emailrep.io
+- aid: emailrep:emailrep-rules-api
+  name: EmailRep Rules API
+  description: The Rules API from EmailRep — 7 operation(s) for rules.
+  humanURL: https://emailrep.io
+  tags:
+  - Rules
+  properties:
+  - type: OpenAPI
+    url: openapi/emailrep-rules-api-openapi.yml
+  - type: Documentation
+    url: https://docs.sublime.security/reference/emailrep-introduction
+  - type: APIReference
+    url: https://docs.sublime.security/reference/emailrep-introduction
+  - type: GettingStarted
+    url: https://github.com/sublime-security/emailrep.io#simple-usage
+  - type: SDKs
+    url: https://github.com/sublime-security/emailrep.io-python
+  - type: SDKs
+    url: https://pypi.org/project/emailrep/
+  - type: SDKs
+    url: https://github.com/arnydo/PSEmailRep
+  - type: SDKs
+    url: https://git.rud.is/hrbrmstr/emailrep
+  - type: SDKs
+    url: https://github.com/WestDiscGolf/EmailRep.NET
+  - type: SDKs
+    url: https://github.com/kaiiyer/emailrep
+  - type: SDKs
+    url: https://github.com/vertoforce/go-emailrep
+  - type: CLI
+    url: https://github.com/sublime-security/emailrep.io-python
+  - type: SourceCode
+    url: https://github.com/sublime-security/emailrep.io
+- aid: emailrep:emailrep-scim-api
+  name: EmailRep SCIM API
+  description: The SCIM API from EmailRep — 8 operation(s) for scim.
+  humanURL: https://emailrep.io
+  tags:
+  - SCIM
+  properties:
+  - type: OpenAPI
+    url: openapi/emailrep-scim-api-openapi.yml
+  - type: Documentation
+    url: https://docs.sublime.security/reference/emailrep-introduction
+  - type: APIReference
+    url: https://docs.sublime.security/reference/emailrep-introduction
+  - type: GettingStarted
+    url: https://github.com/sublime-security/emailrep.io#simple-usage
+  - type: SDKs
+    url: https://github.com/sublime-security/emailrep.io-python
+  - type: SDKs
+    url: https://pypi.org/project/emailrep/
+  - type: SDKs
+    url: https://github.com/arnydo/PSEmailRep
+  - type: SDKs
+    url: https://git.rud.is/hrbrmstr/emailrep
+  - type: SDKs
+    url: https://github.com/WestDiscGolf/EmailRep.NET
+  - type: SDKs
+    url: https://github.com/kaiiyer/emailrep
+  - type: SDKs
+    url: https://github.com/vertoforce/go-emailrep
+  - type: CLI
+    url: https://github.com/sublime-security/emailrep.io-python
+  - type: SourceCode
+    url: https://github.com/sublime-security/emailrep.io
+- aid: emailrep:emailrep-tasks-api
+  name: EmailRep Tasks API
+  description: The Tasks API from EmailRep — 1 operation(s) for tasks.
+  humanURL: https://emailrep.io
+  tags:
+  - Tasks
+  properties:
+  - type: OpenAPI
+    url: openapi/emailrep-tasks-api-openapi.yml
+  - type: Documentation
+    url: https://docs.sublime.security/reference/emailrep-introduction
+  - type: APIReference
+    url: https://docs.sublime.security/reference/emailrep-introduction
+  - type: GettingStarted
+    url: https://github.com/sublime-security/emailrep.io#simple-usage
+  - type: SDKs
+    url: https://github.com/sublime-security/emailrep.io-python
+  - type: SDKs
+    url: https://pypi.org/project/emailrep/
+  - type: SDKs
+    url: https://github.com/arnydo/PSEmailRep
+  - type: SDKs
+    url: https://git.rud.is/hrbrmstr/emailrep
+  - type: SDKs
+    url: https://github.com/WestDiscGolf/EmailRep.NET
+  - type: SDKs
+    url: https://github.com/kaiiyer/emailrep
+  - type: SDKs
+    url: https://github.com/vertoforce/go-emailrep
+  - type: CLI
+    url: https://github.com/sublime-security/emailrep.io-python
+  - type: SourceCode
+    url: https://github.com/sublime-security/emailrep.io
+- aid: emailrep:emailrep-user-reports-api
+  name: EmailRep User Reports API
+  description: The User Reports API from EmailRep — 1 operation(s) for user reports.
+  humanURL: https://emailrep.io
+  tags:
+  - User Reports
+  properties:
+  - type: OpenAPI
+    url: openapi/emailrep-user-reports-api-openapi.yml
   - type: Documentation
     url: https://docs.sublime.security/reference/emailrep-introduction
   - type: APIReference

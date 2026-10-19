@@ -1,0 +1,537 @@
+openapi: 3.2.0
+info:
+  title: Sublime Platform Export API
+  version: generated
+servers:
+- url: '{scheme}://{server}'
+  variables:
+    scheme:
+      default: https
+      enum:
+      - http
+      - https
+    server:
+      default: platform.sublime.security
+      description: Base URL of your Sublime deployment
+security:
+- bearerAuth: []
+tags:
+- name: Export
+paths:
+  /v0/messages/export:
+    get:
+      operationId: v0ListMessageExportJobs
+      parameters:
+      - description: The maximum number of message export jobs to return.
+        in: query
+        name: limit
+        schema:
+          description: The maximum number of message export jobs to return.
+          format: int32
+          maximum: 500
+          minimum: 1
+          type:
+          - integer
+          - 'null'
+      - description: The (zero-based) offset of the message export jobs to return
+        in: query
+        name: offset
+        schema:
+          description: The (zero-based) offset of the message export jobs to return
+          format: int32
+          type:
+          - integer
+          - 'null'
+      - description: Search term to filter message export jobs
+        in: query
+        name: search
+        schema:
+          description: Search term to filter message export jobs
+          type:
+          - string
+          - 'null'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Handler_typesListMessageExportJobsResponseV0'
+          description: OK
+      summary: List message export jobs
+      tags:
+      - Export
+  /v0/messages/export/dashboard/{dashboard_type}:
+    post:
+      description: Export dashboard report (user-reports-overview or attack-insights)
+      operationId: v0ExportDashboardHandler
+      parameters:
+      - description: Dashboard type to export
+        in: path
+        name: dashboard_type
+        required: true
+        schema:
+          description: Dashboard type to export
+          type: string
+      - description: ASA verdicts to filter by
+        explode: true
+        in: query
+        name: asa_verdict
+        schema:
+          description: ASA verdicts to filter by
+          items:
+            type: string
+          type: array
+        style: form
+      - description: Attack score verdicts to filter by
+        explode: true
+        in: query
+        name: attack_score_verdict
+        schema:
+          description: Attack score verdicts to filter by
+          items:
+            type: string
+          type: array
+        style: form
+      - description: Attack tactics or techniques to filter by
+        explode: true
+        in: query
+        name: attack_tactic_or_technique
+        schema:
+          description: Attack tactics or techniques to filter by
+          items:
+            type: string
+          type: array
+        style: form
+      - description: Attack types to filter by
+        explode: true
+        in: query
+        name: attack_type
+        schema:
+          description: Attack types to filter by
+          items:
+            type: string
+          type: array
+        style: form
+      - description: Classifications to filter by
+        explode: true
+        in: query
+        name: classification
+        schema:
+          description: Classifications to filter by
+          items:
+            type: string
+          type: array
+        style: form
+      - description: Dispositions to filter by
+        explode: true
+        in: query
+        name: disposition
+        schema:
+          description: Dispositions to filter by
+          items:
+            type: string
+          type: array
+        style: form
+      - description: Flagged rule IDs to filter by
+        explode: true
+        in: query
+        name: flagged_rule_id
+        schema:
+          description: Flagged rule IDs to filter by
+          items:
+            type: string
+          type: array
+        style: form
+      - description: Start date in UTC using the RFC 3339 format (e.g., '2021-03-14T15:09:26Z')
+        in: query
+        name: from_date
+        required: true
+        schema:
+          description: Start date in UTC using the RFC 3339 format (e.g., '2021-03-14T15:09:26Z')
+          format: date-time
+          type: string
+      - description: Mailbox emails to filter by
+        explode: true
+        in: query
+        name: mailbox_email
+        schema:
+          description: Mailbox emails to filter by
+          items:
+            type: string
+          type: array
+        style: form
+      - description: Report channels to filter by
+        explode: true
+        in: query
+        name: report_channel
+        schema:
+          description: Report channels to filter by
+          items:
+            type: string
+          type: array
+        style: form
+      - description: Reporter emails to filter by
+        explode: true
+        in: query
+        name: reporter_email
+        schema:
+          description: Reporter emails to filter by
+          items:
+            type: string
+          type: array
+        style: form
+      - description: Sender emails to filter by
+        explode: true
+        in: query
+        name: sender_email
+        schema:
+          description: Sender emails to filter by
+          items:
+            type: string
+          type: array
+        style: form
+      - description: End date in UTC using the RFC 3339 format (e.g., '2021-03-14T15:09:26Z')
+        in: query
+        name: to_date
+        required: true
+        schema:
+          description: End date in UTC using the RFC 3339 format (e.g., '2021-03-14T15:09:26Z')
+          format: date-time
+          type: string
+      - description: Type of report to generate
+        in: query
+        name: type
+        required: true
+        schema:
+          description: Type of report to generate
+          type: string
+      responses:
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Handler_typesMessageExportJobV0'
+          description: Accepted
+      summary: Export dashboard report
+      tags:
+      - Export
+  /v0/messages/export/dashboard/{dashboard_type}/estimate:
+    get:
+      description: Estimate export size in bytes of dashboard report (user-reports-overview or attack-insights)
+      operationId: v0EstimateDashboardExportSize
+      parameters:
+      - description: Dashboard type to export
+        in: path
+        name: dashboard_type
+        required: true
+        schema:
+          description: Dashboard type to export
+          type: string
+      - description: ASA verdicts to filter by
+        explode: true
+        in: query
+        name: asa_verdict
+        schema:
+          description: ASA verdicts to filter by
+          items:
+            type: string
+          type: array
+        style: form
+      - description: Attack score verdicts to filter by
+        explode: true
+        in: query
+        name: attack_score_verdict
+        schema:
+          description: Attack score verdicts to filter by
+          items:
+            type: string
+          type: array
+        style: form
+      - description: Attack tactics or techniques to filter by
+        explode: true
+        in: query
+        name: attack_tactic_or_technique
+        schema:
+          description: Attack tactics or techniques to filter by
+          items:
+            type: string
+          type: array
+        style: form
+      - description: Attack types to filter by
+        explode: true
+        in: query
+        name: attack_type
+        schema:
+          description: Attack types to filter by
+          items:
+            type: string
+          type: array
+        style: form
+      - description: Classifications to filter by
+        explode: true
+        in: query
+        name: classification
+        schema:
+          description: Classifications to filter by
+          items:
+            type: string
+          type: array
+        style: form
+      - description: Dispositions to filter by
+        explode: true
+        in: query
+        name: disposition
+        schema:
+          description: Dispositions to filter by
+          items:
+            type: string
+          type: array
+        style: form
+      - description: Flagged rule IDs to filter by
+        explode: true
+        in: query
+        name: flagged_rule_id
+        schema:
+          description: Flagged rule IDs to filter by
+          items:
+            type: string
+          type: array
+        style: form
+      - description: Start date in UTC using the RFC 3339 format (e.g., '2021-03-14T15:09:26Z')
+        in: query
+        name: from_date
+        required: true
+        schema:
+          description: Start date in UTC using the RFC 3339 format (e.g., '2021-03-14T15:09:26Z')
+          format: date-time
+          type: string
+      - description: Mailbox emails to filter by
+        explode: true
+        in: query
+        name: mailbox_email
+        schema:
+          description: Mailbox emails to filter by
+          items:
+            type: string
+          type: array
+        style: form
+      - description: Report channels to filter by
+        explode: true
+        in: query
+        name: report_channel
+        schema:
+          description: Report channels to filter by
+          items:
+            type: string
+          type: array
+        style: form
+      - description: Reporter emails to filter by
+        explode: true
+        in: query
+        name: reporter_email
+        schema:
+          description: Reporter emails to filter by
+          items:
+            type: string
+          type: array
+        style: form
+      - description: Sender emails to filter by
+        explode: true
+        in: query
+        name: sender_email
+        schema:
+          description: Sender emails to filter by
+          items:
+            type: string
+          type: array
+        style: form
+      - description: End date in UTC using the RFC 3339 format (e.g., '2021-03-14T15:09:26Z')
+        in: query
+        name: to_date
+        required: true
+        schema:
+          description: End date in UTC using the RFC 3339 format (e.g., '2021-03-14T15:09:26Z')
+          format: date-time
+          type: string
+      - description: Type of report to generate
+        in: query
+        name: type
+        required: true
+        schema:
+          description: Type of report to generate
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Handler_typesDashboardReportEstimateExportSizeResponse'
+          description: OK
+      summary: Estimate export size of dashboard report
+      tags:
+      - Export
+  /v0/messages/export/{id}:
+    delete:
+      operationId: v0DeleteMessageExportJob
+      parameters:
+      - description: Message export job ID
+        in: path
+        name: id
+        required: true
+        schema:
+          description: Message export job ID
+          format: uuid
+          type: string
+      responses:
+        '200':
+          description: OK
+      summary: Delete message export job
+      tags:
+      - Export
+    get:
+      operationId: v0GetMessageExportJob
+      parameters:
+      - description: Message export job ID
+        in: path
+        name: id
+        required: true
+        schema:
+          description: Message export job ID
+          format: uuid
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Handler_typesGetMessageExportJobResponseV0'
+          description: OK
+      summary: Get message export job
+      tags:
+      - Export
+components:
+  schemas:
+    Handler_typesListMessageExportJobsResponseV0:
+      properties:
+        count:
+          description: Number of results returned
+          format: int32
+          type: integer
+        jobs:
+          items:
+            $ref: '#/components/schemas/Handler_typesMessageExportJobV0'
+          type: array
+        total:
+          description: Total number of results available
+          format: int32
+          type: integer
+      type: object
+    Handler_typesGetMessageExportJobResponseV0:
+      properties:
+        job:
+          $ref: '#/components/schemas/Handler_typesMessageExportJobV0'
+      type: object
+    Handler_typesMessageExportJobV0:
+      description: The message export job details
+      properties:
+        auto_delete_in_seconds:
+          description: Seconds until the export is automatically deleted, counting down from when the job finished
+          format: int32
+          type:
+          - integer
+          - 'null'
+        completed_at:
+          description: Time the job finished successfully. Absent unless the job completed; see failed_at for unsuccessful runs.
+          format: date-time
+          type:
+          - string
+          - 'null'
+        content_type:
+          description: 'Format of the export file: EML, PDF, CSV, or JSON'
+          type:
+          - string
+          - 'null'
+        created_at:
+          description: Time the export job was created
+          format: date-time
+          type: string
+        created_by_user_id:
+          description: ID of the user who started this export
+          format: uuid
+          type: string
+        export_type:
+          description: What the export covers, for example message-eml-export or dashboard-per-message
+          type:
+          - string
+          - 'null'
+        failed_at:
+          description: Time the job failed. Absent unless the job failed.
+          format: date-time
+          type:
+          - string
+          - 'null'
+        failed_reason:
+          description: Why the job failed, for example s3_error or max_retries_reached. Absent unless the job failed.
+          type:
+          - string
+          - 'null'
+        file:
+          $ref: '#/components/schemas/TypesMessageExportJobFile'
+        id:
+          description: Unique ID of this export job. Use it to poll the job or to delete it.
+          format: uuid
+          type: string
+        job_hash:
+          description: Identifies the set of messages this export covers. A later request for the same set attaches to this job instead of starting a new one.
+          type: string
+        task_progress:
+          description: Percent complete, from 0 to 100. Absent until the export has started producing output.
+          format: double
+          type:
+          - number
+          - 'null'
+        task_status:
+          description: Current status of the export
+          enum:
+          - in_progress
+          - completed
+          - failed
+          type: string
+        updated_at:
+          description: Time the job was last updated, including status and progress changes
+          format: date-time
+          type: string
+      required:
+      - created_at
+      - created_by_user_id
+      - id
+      - job_hash
+      - updated_at
+      type: object
+    Handler_typesDashboardReportEstimateExportSizeResponse:
+      properties:
+        estimated_size_bytes:
+          description: Estimated size of the export in bytes
+          format: int64
+          type: integer
+      type: object
+    TypesMessageExportJobFile:
+      description: File for the message export results once job is completed
+      properties:
+        expires_in:
+          description: Approximate duration of link in seconds
+          format: int32
+          type: integer
+        name:
+          description: Name of the export file
+          type: string
+        url:
+          description: URL to download the export file
+          type: string
+      type: object
+  securitySchemes:
+    bearerAuth:
+      scheme: bearer
+      type: http
+x-readme:
+  explorer-enabled: false
