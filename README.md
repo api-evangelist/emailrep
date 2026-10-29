@@ -1,4 +1,4 @@
-# EmailRep (emailrep)
+# EmailRep
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -66,111 +66,196 @@
 
 EmailRep is an email address reputation and threat-intelligence API operated by Sublime Security, Inc. It crawls and enriches data across social media profiles, professional networking sites, dark-web credential leaks, data breaches, phishing kits, phishing emails, spam lists, open mail relays, spam traps, domain age and reputation, and email-deliverability signals to predict the risk associated with any email address. The free, JSON-over-HTTP REST API returns a `reputation`, a `suspicious` flag, a `references` count, and a detailed signal block (blacklisted, malicious_activity, credentials_leaked, data_breach, domain_reputation, deliverable, spoofable, profiles, and more). A POST `/report` endpoint lets analysts contribute observations of malicious email behavior back into the reputation graph.
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/emailrep/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/emailrep/refs/heads/main/apis.yml)
+**Areas:** Security · Email · Email Reputation · Threat Intelligence · Phishing · Fraud Prevention · Anti-Abuse · Deliverability · Risk Scoring · Public APIs
 
-## Scope
+## EmailRep on APIs.io
 
-- **Type:** Index
+Everything profiled for EmailRep is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/emailrep/](https://apis.io/providers/emailrep/)** — or go straight to one of the APIs or properties below.
 
-## Tags
+### APIs (2)
 
-- Security
-- Email
-- Email Reputation
-- Threat Intelligence
-- Phishing
-- Fraud Prevention
-- Anti-Abuse
-- Deliverability
-- Risk Scoring
-- Public APIs
+- [EmailRep Query email address API](https://apis.io/apis/emailrep/emailrep-query-email-address-api/) — The Query email address API from EmailRep — 1 operation(s) for query email address.
+- [EmailRep Report email address API](https://apis.io/apis/emailrep/emailrep-report-email-address-api/) — The Report email address API from EmailRep — 1 operation(s) for report email address.
 
-## Timestamps
+### Published properties
 
-- **Created:** 2026-05-28
-- **Modified:** 2026-05-30
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-## APIs
+#### Arazzo workflows (3)
 
-### EmailRep API
+Multi-step workflows that chain operations into a business task.
 
-Email reputation and threat-intelligence REST API. `GET /{email}` returns a reputation verdict (high/medium/low/none), a `suspicious` flag, a `references` count, and a detailed signal block covering blacklisting, malicious activity, credential leaks, data breaches, domain age and reputation, deliverability, MX validity, SPF/DMARC posture, spoofability, free-provider/disposable status, and known online profiles. `POST /report` lets authenticated callers report an email address as malicious (BEC, phishing, fraud, account takeover, maldoc, etc.) so the signal feeds the reputation graph. Authentication is via a `Key` header issued from emailrep.io/key. Free tier: 250 queries/month, 10/day; Commercial tier: 1,000 queries/month at $20/month with no daily limit; Enterprise: high-volume custom plans with SLA.
+- [EmailRep Screen and Report Malicious Sender](https://apis.io/arazzos/emailrep/emailrep-screen-and-report-malicious-workflow/)
+- [EmailRep Triage Inbound Sender](https://apis.io/arazzos/emailrep/emailrep-triage-inbound-sender-workflow/)
+- [EmailRep Verify Before Report](https://apis.io/arazzos/emailrep/emailrep-verify-before-report-workflow/)
 
-- **Human URL:** [https://emailrep.io](https://emailrep.io)
-- **Base URL:** `https://emailrep.io`
+#### MCP servers (1)
 
-#### Tags
+Model Context Protocol servers that expose the API to agents.
 
-- Email Reputation
-- Threat Intelligence
-- Phishing
-- Fraud
-- Deliverability
+- [sublime-security-docs](https://apis.io/servers/emailrep/sublime-security-docs/)
 
-#### Properties
+#### Agentic access (1)
 
-- [Documentation](https://docs.sublimesecurity.com/reference/emailrep-introduction)
-- [API Reference](https://docs.sublimesecurity.com/reference/emailrep-introduction)
-- [Getting Started](https://docs.sublimesecurity.com/reference/emailrep-quickstart)
-- [OpenAPI](openapi/emailrep-api-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/emailrep-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/emailrep-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-- [SDK](https://github.com/sublime-security/emailrep.io-python)
-- [SDK](https://pypi.org/project/emailrep/)
-- [SDK](https://github.com/arnydo/PSEmailRep)
-- [SDK](https://git.rud.is/hrbrmstr/emailrep)
-- [SDK](https://github.com/WestDiscGolf/EmailRep.NET)
-- [SDK](https://github.com/kaiiyer/emailrep)
-- [SDK](https://github.com/vertoforce/go-emailrep)
-- [C L I](https://github.com/sublime-security/emailrep.io-python)
-- [Source Code](https://github.com/sublime-security/emailrep.io)
+Which operations an agent can call, which act, and which need a human in the loop.
 
-## Common Properties
+- [Emailrep Agentic Access](https://apis.io/agentic-access/emailrep/emailrep-agentic-access/)
 
-- [Arazzo Workflows](arazzo/) — [Arazzo Specification](https://spec.openapis.org/arazzo/latest.html)
+#### JSON Schema (4)
+
+The data models the API reads and writes.
+
+- [EmailReputation](https://apis.io/schemas/emailrep/api-email-reputation/)
+- [EmailReputationDetails](https://apis.io/schemas/emailrep/api-email-reputation-details/)
+- [ReportRequest](https://apis.io/schemas/emailrep/api-report-request/)
+- [ReportResponse](https://apis.io/schemas/emailrep/api-report-response/)
+
+#### JSON Structure (4)
+
+Data models expressed in JSON Structure.
+
+- [Api Email Reputation Details Structure](https://apis.io/json-structure/emailrep/api-email-reputation-details-structure/)
+- [Api Email Reputation Structure](https://apis.io/json-structure/emailrep/api-email-reputation-structure/)
+- [Api Report Request Structure](https://apis.io/json-structure/emailrep/api-report-request-structure/)
+- [Api Report Response Structure](https://apis.io/json-structure/emailrep/api-report-response-structure/)
+
+#### JSON-LD (1)
+
+Linked-data contexts for the provider's vocabulary.
+
+- [Emailrep Api Context](https://apis.io/jsonld/emailrep/emailrep-api-context/)
+
+#### Vocabulary (1)
+
+The provider's domain terms, defined.
+
+- [Emailrep Vocabulary](https://apis.io/vocabularies/emailrep/emailrep-vocabulary/)
+
+#### Examples (4)
+
+Example requests and responses.
+
+- [Api Email Reputation Details Example](https://apis.io/examples/emailrep/api-email-reputation-details-example/)
+- [Api Email Reputation Example](https://apis.io/examples/emailrep/api-email-reputation-example/)
+- [Api Report Request Example](https://apis.io/examples/emailrep/api-report-request-example/)
+- [Api Report Response Example](https://apis.io/examples/emailrep/api-report-response-example/)
+
+#### Collections (4)
+
+Postman and Open Collection request collections.
+
+- [EmailRep API](https://apis.io/collections/emailrep/open-emailrep-api/)
+- [EmailRep Reports API](https://apis.io/collections/emailrep/open-emailrep-reports-api/)
+- [EmailRep Reports Reputation API](https://apis.io/collections/emailrep/open-emailrep-reputation-api/)
+- [EmailRep API](https://apis.io/collections/emailrep/postman-emailrep-api/)
+
+#### Overlays (2)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Emailrep Reports Api Overlay](https://apis.io/overlays/emailrep/emailrep-reports-api-overlay/)
+- [Emailrep Reputation Api Overlay](https://apis.io/overlays/emailrep/emailrep-reputation-api-overlay/)
+
+#### Governance rules (2)
+
+Spectral rulesets for the provider's contracts.
+
+- [EmailRep — jsonschema rules](https://apis.io/rules/emailrep/emailrep-jsonschema-spectral-rules/)
+- [EmailRep API Rules](https://apis.io/rules/emailrep/emailrep-spectral-rules/)
+
+#### Security (3)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Emailrep Authentication](https://apis.io/security/emailrep/emailrep-authentication/)
+- [Emailrep Domain Security](https://apis.io/security/emailrep/emailrep-domain-security/)
+- [Emailrep Trust Center](https://apis.io/security/emailrep/emailrep-trust-center/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Emailrep Plans Pricing](https://apis.io/plans/emailrep/emailrep-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Emailrep Rate Limits](https://apis.io/rate-limits/emailrep/emailrep-rate-limits/)
+
+#### FinOps (1)
+
+What the API costs to run, by operation.
+
+- [Emailrep Finops](https://apis.io/finops/emailrep/emailrep-finops/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
 - [Website](https://emailrep.io)
-- [Documentation](https://docs.sublimesecurity.com/reference/emailrep-introduction)
-- [API Reference](https://docs.sublimesecurity.com/reference/emailrep-introduction)
-- [Getting Started](https://docs.sublimesecurity.com/reference/emailrep-quickstart)
-- [Sign Up](https://emailrep.io/key)
+- [Documentation](https://docs.sublime.security/reference/emailrep-introduction)
+- [Getting started](https://github.com/sublime-security/emailrep.io#simple-usage)
+- [API reference](https://docs.sublime.security/reference/emailrep-introduction)
 - [Pricing](https://emailrep.io/key)
-- [Terms of Service](https://emailrep.io/terms)
-- [Privacy Policy](https://emailrep.io/privacy)
-- [Blog](https://emailrep.io/blog)
-- [Support](https://sublimesecurity.com/contact)
-- [GitHub Organization](https://github.com/sublime-security)
-- [Source Code](https://github.com/sublime-security/emailrep.io)
-- [Operator](https://sublimesecurity.com)
-- [LinkedIn](https://www.linkedin.com/company/sublime-security)
-- [Public APIs Listing](https://github.com/public-apis/public-apis)
-- [Tools](https://github.com/sublime-security/sublime-platform)
-- [Tools](https://github.com/sublime-security/sublime-rules)
-- [Tools](https://github.com/sublime-security/sublime-cli)
-- [Tools](https://github.com/sublime-security/connectors)
-- [Tools](https://github.com/sublime-security/mql-vscode)
-- [Tools](https://github.com/sublime-security/ics-phishing-toolkit)
-- [Tools](https://github.com/sublime-security/strelka)
-- [Tutorials](https://github.com/sublime-security/detection-workshop)
-- [Plans](plans/emailrep-plans-pricing.yml)
-- [Rate Limits](rate-limits/emailrep-rate-limits.yml)
-- [Fin Ops](finops/emailrep-finops.yml)
-- [Vocabulary](vocabulary/emailrep-vocabulary.yml)
-- [Spectral Ruleset](rules/emailrep-spectral-rules.yml)
-- [JSON Schema](json-schema/api-email-reputation-schema.json) — [JSON Schema](https://json-schema.org/specification)
-- [JSON Schema](json-schema/api-email-reputation-details-schema.json) — [JSON Schema](https://json-schema.org/specification)
-- [JSON Schema](json-schema/api-report-request-schema.json) — [JSON Schema](https://json-schema.org/specification)
-- [JSON Schema](json-schema/api-report-response-schema.json) — [JSON Schema](https://json-schema.org/specification)
-- [JSON Structure](json-structure/api-email-reputation-structure.json)
-- [JSON Structure](json-structure/api-email-reputation-details-structure.json)
-- [JSON Structure](json-structure/api-report-request-structure.json)
-- [JSON Structure](json-structure/api-report-response-structure.json)
-- [JSON-LD](json-ld/emailrep-api-context.jsonld) — [JSON-LD](https://www.w3.org/TR/json-ld11/)
-- [Examples](examples/api-email-reputation-example.json)
-- [Examples](examples/api-email-reputation-details-example.json)
-- [Examples](examples/api-report-request-example.json)
-- [Examples](examples/api-report-response-example.json)
+- [Sign up](https://emailrep.io/key)
+- [Support](https://emailrep.io/contact)
+- [Blog](https://blog.sublimesecurity.com)
+- [Terms of service](https://sublimesecurity.com/terms)
+- [Privacy policy](https://sublimesecurity.com/privacy)
+- [GitHub](https://github.com/sublime-security)
 
-## Maintainers
+## API Evangelist rating
 
-**FN:** Kin Lane
-**Email:** kin@apievangelist.com
+**Kin Score 53.3** — developing · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 66.7 |
+| Contract quality | 50.7 |
+| Contract governance | 31.8 |
+| Operational transparency | 34.2 |
+| Developer ergonomics | 62.5 |
+| Access clarity | 61.8 |
+
+**Agent readiness 27.6** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | platform (partial credit) |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | documented (partial credit) |
+| OpenAPI Examples | documented (partial credit) |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | — |
+| Operation Distinctiveness | distinct |
+
+**Regulatory alignment 25.5** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/emailrep/](https://apis.io/providers/emailrep/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for EmailRep: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/emailrep/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
